@@ -225,7 +225,10 @@ how it went"), and the telling rights itself. Wrong-is-a-branch, not an ending.
 - [x] **GATE:** soak green, straight + flinch + deeds walks green, one-journal-entry-per-
       telling verified, console clean, deployed.
 
-## M8 — BOOK THREE: THE RELAY (new content milestone)
+## M8 — BOOK THREE: THE RELAY — ✅ DONE 2026-07-18 · gates green (soak 73 relay
+completions/2000 seeded runs; careful+loose walks both land; chain chip live at 4+ hands;
+all 3 deeds; one-journal-entry verified; console clean; deployed + hub bumped to 14 tellings
+with "three true books" card copy).
 
 The third home run of the real escape — the long road through occupied Europe (after the
 real Bram van der Stok's route, names changed as ever) — told to read THE HELPERS into the
