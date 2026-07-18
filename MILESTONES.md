@@ -193,6 +193,18 @@ mobile deep-pass (works, untuned).*
       checks (HUD, save, rename tokens, Log across two visits); console clean; afterword
       page reachable from every ending; hub book opens the game.
 
+## M6 — THE JOURNAL & THE AUDIT — ✅ DONE 2026-07-18
+
+- [x] **Her notebook**: `P.journal` (cap 60) in the Tellings gallery; entries renameable
+      inline (click title → input; rename persists; original shown as "it came out as …").
+- [x] **Her line**: all 12 endings carry `her` reactions (STORY.her map, #ending-her).
+- [x] **The residue remembers**: title screen quotes last telling's title.
+- [x] **THE DEEDS AUDIT**: 24/24 Mentions earned across exactly three chained tellings
+      (camp-sweep → The Garden, kit-max docks → The Needle's Eye, then Answering the Roll).
+      No game fixes needed — every deed was honestly reachable.
+- [x] **GATE:** 24/24 + soak green + rename persistence + roll-with-her-line all DOM-verified;
+      console clean; deployed.
+
 ---
 
 **Order of battle if a session is short:** M0+M1 are one sitting (the slice proves the voice).

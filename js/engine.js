@@ -13,7 +13,7 @@ const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
 
 /* ---------------- persistence: the retellings ---------------- */
 function defP(){ return { runs:0, endings:{}, log:{}, mentions:{}, frame:null,
-  names:{ hero:'Kit', friend:'Freddie' }, lastTitle:null }; }
+  names:{ hero:'Kit', friend:'Freddie' }, lastTitle:null, journal:[] }; }
 function loadP(){ try{ const p=JSON.parse(localStorage.getItem(K_P));
   if(p){ const d=defP(); const m=Object.assign(d,p);
     m.names=Object.assign({hero:'Kit',friend:'Freddie'}, p.names||{}); return m; } }catch(e){}
@@ -117,6 +117,7 @@ function titleScreen(){
   $('name-hero').value=P.names.hero; $('name-friend').value=P.names.friend;
   $('title-residue').innerHTML = P.runs
     ? `You have told it ${P.runs===1?'once':P.runs+' times'} now. It comes out different every time. That is not lying — that is the only way to tell all of it.`
+      + (P.lastTitle?`<br>Last time it came out as <em>“${P.lastTitle}.”</em>`:'')
     : '';
 }
 function readNames(){
@@ -166,12 +167,33 @@ $('btn-afterword').onclick=()=>{
 };
 $('btn-tellings').onclick=()=>{
   const ids=Object.keys(ENDINGS).filter(i=>i!=='e_pause'||P.endings[i]);
+  const journal=(P.journal||[]).slice().reverse();
   $('gallery-title').textContent='The Tellings';
   $('gallery-body').innerHTML=`<div class="gallery-sub">How it has come out so far. The real endings arrive as the telling reaches them.</div>
     <div class="grid-cells">`+ids.map(i=>{ const e=ENDINGS[i];
       return P.endings[i]
         ? `<div class="cell k-${e.kind}"><span class="ek">${e.kind==='pause'?'bookmark':e.kind}</span>${e.title}${P.endings[i]>1?` ×${P.endings[i]}`:''}</div>`
-        : `<div class="cell locked">— untold —</div>`; }).join('')+`</div>`;
+        : `<div class="cell locked">— untold —</div>`; }).join('')+`</div>`
+    +(journal.length?`<div class="j-head">Her notebook</div>
+      <div class="gallery-sub">She writes them down now. Click a title to give a telling its own name.</div>
+      <div id="journal">`+journal.map(j=>{
+        const idx=P.journal.indexOf(j);
+        return `<div class="j-entry"><span class="j-n">№ ${j.n}</span>
+          <span class="j-title" data-idx="${idx}" title="name this telling">${j.name?`“${j.name}”`:j.t}</span>
+          ${j.name?`<span class="j-was">— it came out as ${j.t}</span>`:''}</div>`; }).join('')+`</div>`:'');
+  $('gallery-body').querySelectorAll('.j-title').forEach(el=>{
+    el.onclick=()=>{
+      const idx=+el.dataset.idx, j=P.journal[idx]; if(!j) return;
+      const inp=document.createElement('input');
+      inp.className='j-input'; inp.maxLength=48; inp.value=j.name||'';
+      inp.placeholder='the one where…';
+      el.replaceWith(inp); inp.focus();
+      const save=()=>{ const v=inp.value.trim(); if(v) j.name=v; else delete j.name;
+        saveP(); $('btn-tellings').onclick(); };
+      inp.onblur=save;
+      inp.onkeydown=e=>{ if(e.key==='Enter') inp.blur(); if(e.key==='Escape'){ inp.value=j.name||''; inp.blur(); } };
+    };
+  });
   show('gallery');
 };
 
@@ -274,6 +296,9 @@ function ending(id){
   if(!e){ console.error('missing ending',id); return titleScreen(); }
   P.runs++; P.endings[id]=(P.endings[id]||0)+1;
   P.lastTitle=fmt(e.title);
+  P.journal=P.journal||[];
+  P.journal.push({ e:id, n:P.runs, t:fmt(e.title) });
+  if(P.journal.length>60) P.journal.shift();
   saveP(); clearRun();
   AUDIO.setScene('ending','elegy',9);
   AUDIO.sting(e.kind);
@@ -284,6 +309,7 @@ function ending(id){
   $('ending-title').textContent=fmt(e.title);
   $('ending-text').innerHTML=fmt(e.text).split('\n\n').map(p=>`<p>${p}</p>`).join('');
   $('ending-meta').textContent = S && S.flags.tunnelRevealed ? `${S.feet} feet on the ledger` : '';
+  $('ending-her').innerHTML = STORY.her[id] ? fmt(STORY.her[id]) : '';
   $('btn-lastpage').classList.toggle('urgent', id==='e_roll');
   show('ending-screen');
 }

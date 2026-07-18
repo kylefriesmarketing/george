@@ -857,6 +857,25 @@ e_pause:{ kind:'pause', art:'club', title:'The Telling Pauses',
 
 };
 
+/* ======================================================================
+   HER LINES — the granddaughter's one-line reaction closing each ending.
+   Elegy-adjacent; never maudlin; she is the reader the book deserves.
+   ====================================================================== */
+const her = {
+  e_needle:`She is quiet a long time, and then turns the full glass at the empty place a quarter-turn. “One of three,” she says — to the tablecloth, like a number she intends to have words with.`,
+  e_longwalk:`“You sat down in the snow to look at them,” she says. “The mountains.” I did. “Good,” she says, fiercely, as if somebody somewhere had argued.`,
+  e_uniform:`She does not touch her glass. After a while she puts her hand flat on the cloth beside mine — not on it; beside it — the way you steady a table, not a man.`,
+  e_man77:`“Seventy-six,” she says back to me, quietly, holding it exactly the way I handed it to her. A prayer with digits, passed on.`,
+  e_given_stockholm:`She reads the four capitals twice. Then she looks at the blazer chair, and back at me. “He framed the letter,” she says. “You kept the number.” It is not a question, and in fifty years I have not heard it said better.`,
+  e_given_list:`She holds her own hands in her lap a moment, the way men do at the memorial. “He drew you maps,” she says at last. “To the end?” To the end, love. On this very tablecloth.`,
+  e_garden:`“So the one that never went anywhere—” she starts, and stops, and I watch her get there, the way her grandfather got there one evening over the dispersal. “—went the furthest,” she finishes. His laugh, exactly.`,
+  e_roadwest:`She writes the number of the halts on the tablecloth with her finger, and rubs it out at once. “Doc was right, though,” she says. “About January.” He was right about everything, love. It was his one flaw.`,
+  e_appell:`For a while she looks at the window, not at me. Then: “But there was a George.” There was, love. That is the whole telling: there was.`,
+  e_hook:`“Who else knows?” she asks. Nobody, now. “Then it’s mine,” she says, and folds her hands over it — and that is where it lives now, and it weighs less tonight than it did this morning.`,
+  e_roll:`She stands when I stand. Every chair at that table that still has a man in it stands.`,
+  e_pause:`“Next time,” she says, “no bookmark.”`,
+};
+
 /* ---------------- helpers used by choices (engine binds award/logSee) -- */
 let award=()=>{}, logSee=()=>{};
 const bindHelpers=(a,l)=>{ award=a; logSee=l; };
@@ -912,6 +931,6 @@ const afterword = `<h3>The Fifty</h3>
 <p><em>The characters in this game are inventions wearing the true events. The names in this story were changed. These were the real ones. If the game sent you here wanting more, the record is rich: the escapers themselves wrote it down, and the fifty names are read aloud at RAF stations to this day.</em></p>
 <p class="af-close"><em>This happened. The names belong to no one, so that the story can belong to all of them.</em></p>`;
 
-return { nodes, endings, regions, CHAPTERS, cast, mentions, glossary, afterword,
+return { nodes, endings, regions, CHAPTERS, cast, mentions, glossary, afterword, her,
   bindHelpers, bindP, TUNNEL_GOAL:336, START:'n_club' };
 })();
