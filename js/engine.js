@@ -138,7 +138,7 @@ $('btn-log').onclick=()=>{
     +Object.entries(STORY.cast).map(([id,c])=>{
       const st=P.log[id]||0;
       const nm=typeof c.name==='function'?c.name():c.name;
-      return st? `<div class="crew-entry"><div class="crew-name">${nm}${st>=3?' <span class="log-fate">— his story is told</span>':''}</div>
+      return st? `<div class="crew-entry"><img class="log-face" src="assets/cast/${id}.jpg" alt="" loading="lazy" onerror="this.remove()"><div class="crew-name">${nm}${st>=3?' <span class="log-fate">— his story is told</span>':''}</div>
         <div class="crew-role">${c.role}</div><div class="crew-note">${st>=2?c.note:'<em>You have met him. The rest of him is still to witness.</em>'}</div></div>`
       : `<div class="crew-entry locked"><div class="crew-name">— a name not yet entered —</div></div>`; }).join('');
   show('gallery');
@@ -165,7 +165,7 @@ $('btn-afterword').onclick=()=>{
   show('gallery');
 };
 $('btn-tellings').onclick=()=>{
-  const ids=Object.keys(ENDINGS);
+  const ids=Object.keys(ENDINGS).filter(i=>i!=='e_pause'||P.endings[i]);
   $('gallery-title').textContent='The Tellings';
   $('gallery-body').innerHTML=`<div class="gallery-sub">How it has come out so far. The real endings arrive as the telling reaches them.</div>
     <div class="grid-cells">`+ids.map(i=>{ const e=ENDINGS[i];

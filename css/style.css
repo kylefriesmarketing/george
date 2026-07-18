@@ -191,7 +191,9 @@ kbd{ font-family:'Courier New',monospace; background:#00000018; padding:0 4px; b
 .cell.k-pause .ek{ color:#33507a; }
 .cell.k-got .ek{ color:#3c6b38; }
 .cell.locked{ color:#a39a7c; font-style:italic; }
-.crew-entry{ border-bottom:1px solid #d8ceb2; padding:10px 2px; }
+.crew-entry{ border-bottom:1px solid #d8ceb2; padding:10px 2px; overflow:hidden; }
+.log-face{ float:right; width:72px; height:72px; object-fit:cover; margin:2px 0 6px 12px;
+  border:1px solid #b3ab8f; box-shadow:0 2px 6px #0003; filter:sepia(.10) saturate(.92); }
 .crew-entry.locked{ color:#a39a7c; font-style:italic; }
 .crew-name{ font-weight:bold; color:#2c2a22; }
 .log-fate{ font-family:'Courier New',monospace; font-size:11px; color:#8c2f24; letter-spacing:1px; }
@@ -235,6 +237,18 @@ kbd{ font-family:'Courier New',monospace; background:#00000018; padding:0 4px; b
   #scene-wrap{ margin:18px 14px 0; height:200px; }
   #title-art{ margin:18px 14px 0; height:210px; }
   .ending-inner{ padding:18px 22px; }
+}
+@media (max-width:480px){
+  .game-title{ letter-spacing:3px; }
+  .title-inner{ padding:16px 16px 8px; }
+  .names-row input{ width:130px; }
+  .menu-btn, .menu-btn.small{ min-width:230px; }
+  #node-text p{ font-size:15.5px; }
+  .choice{ font-size:14.5px; padding:8px 10px; }
+  .hud-row{ gap:12px; }
+  .paper::before{ border-width:5px; }
+  .gallery-box{ padding:18px 16px; }
+  .log-face{ width:56px; height:56px; }
 }
 @media (prefers-reduced-motion:reduce){
   .unfurl,#day-stamp.show,.delta-float{ animation-duration:.01s !important; }

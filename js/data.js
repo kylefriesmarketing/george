@@ -34,7 +34,7 @@ const regions = {
   walk:    { name:'The Roads South',                  ch:7, art:'walk' },
   docks:   { name:'The Baltic Docks',                 ch:7, art:'docks' },
   list:    { name:'The List',                         ch:7, art:'list' },
-  vault:   { name:'The Memorial in the Pines',        ch:7, art:'list' },
+  vault:   { name:'The Memorial in the Pines',        ch:7, art:'vault' },
   agency:  { name:'Dean & Dawson — the Travel Agency', ch:5, art:'dulag' },
   garden:  { name:'The Garden — 1944',                ch:8, art:'tunnel' },
   marchw:  { name:'The Road West — January ’45',      ch:8, art:'marchw' },
@@ -106,7 +106,17 @@ const nodes = {
 
 /* ---------- FRAME: 1994 ---------- */
 n_club:{ region:'club', reg:'elegy', title:'More Chairs Than Men',
-  text:`The club lays the long table the same way every year: white cloth, the good silver, and one place set at the end that nobody will use, with a folded blazer over the back of the chair. There were forty of us at this dinner once. Tonight we are six, and I am the only one who was in Hut 104.\n\nThe girl finds me by the window with a glass I have been not-drinking for half an hour. Tiny’s granddaughter — she has his laugh, which is a remarkable thing to hear come out of a person you could fit in his old greatcoat pocket. She pulls up the chair beside me the way he used to, backwards, arms folded on the rail.\n\n“Grandad never would tell it,” she says. “Not properly. Will you?”\n\nFifty years I have been not telling this story properly. I look at the folded blazer at the end of the table, and the folded blazer looks back.`,
+  text:(S,P)=>{
+    const base=`The club lays the long table the same way every year: white cloth, the good silver, and one place set at the end that nobody will use, with a folded blazer over the back of the chair. There were forty of us at this dinner once. Tonight we are six, and I am the only one who was in Hut 104.\n\nThe girl finds me by the window with a glass I have been not-drinking for half an hour. Tiny’s granddaughter — she has his laugh, which is a remarkable thing to hear come out of a person you could fit in his old greatcoat pocket. She pulls up the chair beside me the way he used to, backwards, arms folded on the rail.`;
+    if(!P.runs) return base+`\n\n“Grandad never would tell it,” she says. “Not properly. Will you?”\n\nFifty years I have been not telling this story properly. I look at the folded blazer at the end of the table, and the folded blazer looks back.`;
+    const skip=untoldName(P);
+    const ask = skip===null
+      ? `“You know it all now,” she says. “Every man, told to the end. So tonight I want it in order, the whole book of it — and at nine, when they read the roll, I want you on your feet.”`
+      : skip==='Grandad'
+      ? `“You always go around Grandad,” she says, before the soup is even down. “You do the shuffle, you do the marrows, and then you go around him. Tonight, don’t.”`
+      : `“You always skip ${skip},” she says, before the soup is even down. She keeps the ledger of my tellings better than I do. “Tonight, don’t.”`;
+    return base+`\n\nI have told her this before${P.runs>1?' — '+(P.runs>4?'more times than the waiters approve of':P.runs+' times now'):''}, and it has come out different every time, because that is the only way to tell all of it.\n\n${ask}\n\nI look at the folded blazer at the end of the table, and the folded blazer looks back.`;
+  },
   choices:[
     { t:'Begin where it begins: with an engine on fire.', pre:'tell it forward',
       fx:(S,P)=>{P.frame='fire';}, go:'n_fire' },
@@ -862,6 +872,11 @@ const drawNums=(S)=>{ if(!S.num){ const committee=S.contrib>=4||S.role==='digger
   S.fnum = 104; } };
 /* the word of the navigator: did the given place come home? */
 const goodWord=(S)=>S.crew>=5 && S.nv.friend<2;
+/* the granddaughter's editing: the first man whose story is still untold */
+const UNTOLD_NAMES={ freddie:'the navigator', magpie:'the Magpie', zabek:'the Tunnel King',
+  inky:'the forger', duke:'the scrounger', tiny:'Grandad', doc:'the Doc',
+  reyter:'the old Kommandant', brandt:'the corporal with the photograph', weasel:'the Weasel' };
+const untoldName=(P)=>{ for(const k of Object.keys(cast)) if((P.log[k]||0)<3) return UNTOLD_NAMES[k]; return null; };
 
 /* ======================================================================
    THE GLOSSARY — kriegie one-liners (codex, title screen)
