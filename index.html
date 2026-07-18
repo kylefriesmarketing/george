@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>G FOR GEORGE — the tunnels of Stalag Luft III</title>
+<meta name="description" content="Silesia, 1943. Six hundred prisoners, three tunnels, one list of names. The true story of the Great Escape — names changed — told by the last man left to tell it.">
+<meta name="theme-color" content="#221d17">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="THE SHELF">
+<meta property="og:title" content="G FOR GEORGE — the tunnels of Stalag Luft III">
+<meta property="og:description" content="Your Lancaster fell in 1942. The tunnel is 336 feet long. The history is fixed; where your number falls in it is not. The true story of the Great Escape, names changed.">
+<meta property="og:url" content="https://kylefriesmarketing.github.io/george/">
+<meta property="og:image" content="https://kylefriesmarketing.github.io/george/assets/og.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="G FOR GEORGE — the tunnels of Stalag Luft III">
+<meta name="twitter:description" content="Six hundred prisoners, three tunnels, one list of names. The true story, names changed.">
+<link rel="stylesheet" href="css/style.css">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='2' y='14' width='28' height='4' fill='%238c2f24'/%3E%3Crect x='13' y='18' width='4' height='10' fill='%232c2a22'/%3E%3Cpath d='M4 10 L8 4 L12 10 Z M20 10 L24 4 L28 10 Z' fill='%233c4c38'/%3E%3C/svg%3E">
+</head>
+<body>
+<div id="app" data-reg="elegy">
+
+  <div id="title-screen" class="screen">
+    <div class="paper">
+      <div id="title-art"><div class="tape" style="top:-8px;left:38px;transform:rotate(-5deg)"></div>
+        <div class="tape" style="top:-8px;right:38px;transform:rotate(4deg)"></div></div>
+      <div class="title-inner">
+        <div class="title-eyebrow">silesia · 1942–1945 · six hundred officers · three tunnels</div>
+        <h1 class="game-title">G FOR GEORGE</h1>
+        <div class="title-sub">the tunnels of Stalag Luft III</div>
+        <div class="title-contract">This happened. The names belong to no one, so that the story can belong to all of them. The real names are kept for the last page.</div>
+        <div id="title-residue" class="title-residue"></div>
+        <div class="names-row">
+          <label>the pilot <input id="name-hero" maxlength="18" value="Kit"></label>
+          <label>the navigator <input id="name-friend" maxlength="18" value="Freddie"></label>
+        </div>
+        <div class="title-menu">
+          <button id="btn-begin" class="menu-btn">Begin the Telling</button>
+          <button id="btn-continue" class="menu-btn hidden">Resume the Telling</button>
+          <button id="btn-log" class="menu-btn small">The Log</button>
+          <button id="btn-mentions" class="menu-btn small">Mentions in Dispatches</button>
+          <button id="btn-tellings" class="menu-btn small">The Tellings</button>
+          <button id="btn-glossary" class="menu-btn small">The Kriegie Glossary</button>
+          <button id="btn-afterword" class="menu-btn small">The Last Page — the Real Names</button>
+        </div>
+        <div class="shelf-line">part of <a class="shelf-link" href="https://kylefriesmarketing.github.io/games/" target="_blank" rel="noopener">THE SHELF</a></div>
+        <div class="title-foot">after the true events at Sagan, 1943–44 &middot; press <kbd>~</kbd> for the lantern &middot; <kbd>m</kbd> mutes &middot; <kbd>1–9</kbd> choose</div>
+      </div>
+    </div>
+  </div>
+
+  <div id="gallery" class="screen overlay hidden">
+    <div class="gallery-box">
+      <h2 id="gallery-title"></h2>
+      <div id="gallery-body"></div>
+      <button id="gallery-close" class="menu-btn small">Return</button>
+    </div>
+  </div>
+
+  <div id="game-screen" class="screen hidden">
+    <div class="paper">
+      <div id="scene-wrap"><div id="scene-art"></div>
+        <div class="tape" style="top:-8px;left:30px;transform:rotate(-4deg)"></div>
+        <div class="tape" style="top:-8px;right:30px;transform:rotate(5deg)"></div>
+        <div id="day-stamp" aria-hidden="true"></div>
+      </div>
+      <div id="hud"></div>
+      <div id="clock-rail" title="the telling"></div>
+      <div id="story-layer">
+        <div id="text-panel" aria-live="polite" role="region" aria-label="Story">
+          <div id="region-name"></div>
+          <div id="node-title"></div>
+          <div id="node-text"></div>
+          <div id="choices" role="group" aria-label="Choices — press 1 through 9 to choose"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="ending-screen" class="screen hidden">
+    <div class="paper">
+      <div id="ending-art"><div class="tape" style="top:-8px;left:34px;transform:rotate(-5deg)"></div>
+        <div class="tape" style="top:-8px;right:34px;transform:rotate(4deg)"></div></div>
+      <div class="ending-inner">
+        <div id="ending-kind"></div>
+        <h2 id="ending-title"></h2>
+        <div id="ending-text"></div>
+        <div id="ending-meta"></div>
+        <button id="btn-again" class="menu-btn">Back to the Club</button>
+        <button id="btn-lastpage" class="menu-btn small">The Last Page — the Real Names</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="debug-panel" class="hidden"></div>
+</div>
+
+<script src="js/data.js"></script>
+<script src="js/images.js"></script>
+<script src="js/art.js"></script>
+<script src="js/audio.js"></script>
+<script src="js/engine.js"></script>
+</body>
+</html>
