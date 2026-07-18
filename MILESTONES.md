@@ -225,6 +225,25 @@ how it went"), and the telling rights itself. Wrong-is-a-branch, not an ending.
 - [x] **GATE:** soak green, straight + flinch + deeds walks green, one-journal-entry-per-
       telling verified, console clean, deployed.
 
+## M8 — BOOK THREE: THE RELAY (new content milestone)
+
+The third home run of the real escape — the long road through occupied Europe (after the
+real Bram van der Stok's route, names changed as ever) — told to read THE HELPERS into the
+record: the schoolmistress, the courier girl, the priest, the mountain guide, the two never
+named. The traveler's survival is fixed history; the weight is the chain's fates, which he
+tries to skip and she makes him finish. New light mechanic: THE CHAIN (hands counted on the
+HUD). Unlocks after Book Two is told.
+
+- [ ] ~12 nodes: out at eighteen → the trains west → his own street, the door not knocked →
+      the safehouse rules → the courier girl → the other country's Inky → the line rolled up
+      behind him → passeur country → the Pyrenees at night → Gibraltar → the Ledger of Hands.
+- [ ] `e_relay` (kind home) + her line; +3 Mentions (The Door Not Knocked / Hand to Hand /
+      The Ledger of Hands) → registry 30; afterword gains van der Stok + THE HELPERS.
+- [ ] 3 new scenes (canal dusk, the safehouse attic, the Pyrenees crossing) ≈ 6cr.
+- [ ] Hub totals bump (14 tellings) in games repo.
+- [ ] **GATE:** soak (seeded with e_horse) green, e_relay + deeds reachable, chain chip
+      renders, live deploy.
+
 ---
 
 **Order of battle if a session is short:** M0+M1 are one sitting (the slice proves the voice).

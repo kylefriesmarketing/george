@@ -251,6 +251,8 @@ function paintHUD(){
   h+=`<div class="meter nervem" title="The men's weather. A fevered man left alone drifts toward the wire.">
         <span class="m-name">nerve</span><span class="nv ${'nv'+S.nv.hero}">you: ${NVLBL[S.nv.hero]}</span>
         <span class="nv ${'nv'+S.nv.friend}">${P.names.friend.toLowerCase()}: ${NVLBL[S.nv.friend]}</span></div>`;
+  if(S.chain && S.chain.length) h+=`<div class="meter chainm" title="The relay: the hands that have passed him so far. ${S.chain.join(' → ')}">
+        <span class="m-name">the chain</span><span class="m-val">${S.chain.length} hands</span></div>`;
   h+=`</div></div>`;
   $('hud').innerHTML=h;
 }
@@ -374,6 +376,7 @@ window.__ggSoak = function(n=200, seed=1944){
     const sS=newRun();
     const sP=defP(); /* throwaway — no __live, so no toasts, no saves */
     if(run%2) sP.runs=1; /* half the walks are retellings, so Book Two gets soaked */
+    if(run%4===3){ sP.runs=2; sP.endings={e_horse:1}; } /* and a quarter have told the horse, so Book Three gets soaked */
     let node=sS.node, steps=0, done=false;
     try{
       while(steps++<200){

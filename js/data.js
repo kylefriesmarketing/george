@@ -38,6 +38,9 @@ const regions = {
   agency:  { name:'Dean & Dawson — the Travel Agency', ch:5, art:'dulag' },
   horse:   { name:'East Compound — the Vaulting Horse', ch:4, art:'horse' },
   inhorse: { name:'Inside the Horse',                  ch:4, art:'inhorse' },
+  canal:   { name:'Holland — His Own Country',         ch:7, art:'canal' },
+  safehouse:{ name:'The Attic Room',                   ch:7, art:'safehouse' },
+  pyrenees:{ name:'The Mountains — the Last Fence',    ch:8, art:'pyrenees' },
   garden:  { name:'The Garden — 1944',                ch:8, art:'tunnel' },
   marchw:  { name:'The Road West — January ’45',      ch:8, art:'marchw' },
   home:    { name:'Home',                             ch:8, art:'home' },
@@ -90,6 +93,9 @@ const mentions = {
   vaulter:  { t:'Twenty a Day',              hint:'Take every vaulting shift in Book Two.' },
   flush:    { t:'Flush to the Frame',        hint:'Reseal the trap so well the horse itself would approve.' },
   allthree: { t:'All Three',                 hint:'Catch the boat. Everyone catches the boat.' },
+  thedoor:  { t:'The Door Not Knocked',      hint:'Walk past your own street in Book Three, and keep walking.' },
+  handtohand:{ t:'Hand to Hand',             hint:'Guard every link of the chain the careful way.' },
+  ledger:   { t:'The Ledger of Hands',       hint:'Finish the third telling — all of it, fates included.' },
   nonames:  { t:'No Names, No Pack Drill', hint:'Give the interrogator nothing — twice.' },
   watcher:  { t:'Eyes Open',               hint:'Learn the wire before you touch it.' },
   firstsand:{ t:'First Sand',              hint:'Carry your first bag down a trouser leg.' },
@@ -134,6 +140,9 @@ n_club:{ region:'club', reg:'elegy', title:'More Chairs Than Men',
     { t:'She closes the notebook. “Tell me the other one tonight. Grandad’s favorite — the one about the horse.” The one from next door. The one that worked clean.',
       pre:'book two: the horse', req:(S,P)=>P.runs>=1,
       go:'n_h1' },
+    { t:'She runs her finger down the notebook to a line she has underlined twice: three made it home. “You’ve told me the boats. Nobody ever tells me the third one — the long way round.”',
+      pre:'book three: the relay', req:(S,P)=>!!(P.endings&&P.endings.e_horse),
+      go:'n_v1' },
     { t:'Tonight the secretary reads the roll at nine — and tonight, for the first time, you know all of it. Every man, told to the end. Stand, and answer.',
       pre:'★ the log is complete', req:(S,P)=>logComplete(P),
       fx:(S,P)=>{ award(P,'perardua'); }, end:'e_roll' },
@@ -970,6 +979,173 @@ n_h10:{ region:'docks', reg:'elegy', title:'Everybody Catches the Boat',
       fx:(S,P)=>{ award(P,'allthree'); }, end:'e_horse' },
   ]},
 
+/* ======================================================================
+   BOOK THREE — THE RELAY (the third home run: the long way round,
+   after the real Dutchman's road, names changed. The traveler's arrival
+   is fixed history. The weight is the chain — the hands that passed him
+   home — and this time HE is the one who tries to skip the fates, and
+   she holds him to the ledger.)
+   ====================================================================== */
+
+n_v1:{ region:'club', reg:'elegy', title:'The Third One',
+  text:(S,P)=>`Because the third one, love, is not an escape story. That is why nobody tells it.\n\nThe boats are escape stories — a man against a fence, a man against the water, and the man wins. The third one is a RELAY. A Dutchman went down Harry at number eighteen, out before the shot, and then walked and rode and waited his way home across the whole occupied continent — Holland, Belgium, France, the mountains, four months — and he did not do one mile of it alone. He was passed, hand to hand, by bakers and schoolmistresses and tram conductors and priests and girls of nineteen, every one of whom knew the price of holding him and held him anyway. Most of their names he never learned. Some of their names nobody will ever learn now.\n\nSo here is the contract for tonight’s telling, and it is her grandfather’s kind of contract: we tell the road — but at the end we read the ledger of hands, all of it, fates included. She looks at me a long moment, pencil still. Then she rules a fresh page into two columns, and the second column is headed, in her capitals: WHAT BECAME OF THEM.`,
+  choices:[
+    { t:'Begin at the ladder: number eighteen into the snow, hours before the shot — the night told from the far side of the wire at last.',
+      fx:(S,P)=>{S.chain=[];}, go:'n_v2' },
+    { t:'Begin with his advantages, honestly counted: native Dutch, good German, better nerve — and a face the Reich could not stop trusting.',
+      fx:(S,P)=>{S.chain=[]; S.flags.vtell='honest';}, go:'n_v2' },
+    { t:'Begin with the rule he traveled by, which the whole relay ran on: never know more than the next pair of hands.',
+      fx:(S,P)=>{S.chain=[]; S.flags.vtell='rule';}, go:'n_v2' },
+    { t:'Begin where she wants it begun: with the second column open on the table, so no one in this story can be skipped.',
+      pre:'the ledger, promised', fx:(S,P)=>{S.chain=[]; S.flags.vtell='ledger';}, go:'n_v2' },
+  ]},
+
+n_v2:{ region:'hole', reg:'dread', title:'Number Eighteen',
+  text:(S,P)=>`Eighteen was a good number. Eighteen went down the ladder while the schedule still believed in itself, crawled the year of other men’s work in the fat-lamp dark, took the two tugs at the rope, and did the ten open feet while the tower light was elsewhere on its rounds.\n\nAnd then — this is where his story leaves mine, and you will hear the difference in my voice, love; I have never quite kept the envy out of it — then he STOOD UP in the pines and became somebody else entirely. Not a kriegie flat in a ditch. A young Dutch workman with papers in his breast pocket and a tram-rider’s bored face, walking into Sagan station a full three hours before the shot, buying a ticket west in unhurried German while behind him, under the ground he had just left, the count was still climbing toward seventy-seven.\n\nHe was on the platform when the sirens finally went. He told me — years after, at a reunion, with the particular smile he kept for this — that he yawned. Deliberately. A tired workman bothered by noise. It was, he said, the best acting of his life, and his knees never once got the news.`,
+  choices:[
+    { t:'Ride the first train with him, west into the Reich, in a carriage full of uniforms — the safest seat in Germany, if your face holds.',
+      go:'n_v3' },
+    { t:'Stay on the yawn a moment. Fifty years, and it is still the coolest single thing you know a man to have done.',
+      go:'n_v3' },
+    { t:'Mark the arithmetic she should have: eighteen out before the shot; the shot at seventy-seven. The margin of his whole life was fifty-nine men wide.',
+      go:'n_v3' },
+    { t:'Note what he carried besides papers: Inky’s hours, the tailors’ stitches, the committee’s maps — a compound’s whole year, folded into one breast pocket.',
+      go:'n_v3' },
+  ]},
+
+n_v3:{ region:'station', reg:'dread', title:'West',
+  text:(S,P)=>`Three days of trains, west and then north, through a Reich that was looking for him with dogs and lists — but looking for ESCAPERS: furtive men, wet men, men in converted greatcoats keeping to hedgerows. It was not looking for a bored young workman reading a newspaper in second class, correcting his own German accent town by town as the dialects shifted, letting the checks come to him.\n\nThe checks came. Torch, papers, face; torch, papers, face. At Hanover a Feldgendarm held his workbook a long time and asked why a Dutch electrician was so far east, and he gave the answer Dean & Dawson had grown for exactly this soil — the Breslau firm, the contract, the permanently engaged telephone number — and added, on his own account, a small complaint about the wages. The Feldgendarm, he told me, almost smiled. Nothing buys belief like a grievance.\n\nAnd then the border country, and the crossing into Holland — which he did, in the end, on foot at night by a farm track he had known since boyhood. Which brings the road to the part I always slow down for. He was HOME, love. And home was the one place on the continent he could not stay.`,
+  choices:[
+    { t:'Cross the farm track with him at night — the smell of his own country arriving before the sight of it.',
+      go:'n_v4' },
+    { t:'Let her have the grievance trick entire: complaint as camouflage. She writes it down like a girl intending to use it.',
+      go:'n_v4' },
+    { t:'Count the checks he passed: eleven, by his count, between Sagan and the border. Eleven coin-flips, weighted only by nerve and ink.',
+      go:'n_v4' },
+    { t:'Say the quiet part: every check he passed, he passed on a dead man’s craftsmanship. Inky’s stamps went home to Holland, even if Inky never did.',
+      go:'n_v4' },
+  ]},
+
+n_v4:{ region:'canal', reg:'ache', title:'The Door Not Knocked',
+  text:(S,P)=>`He came into his own town along the canal at dusk, past the bridge he had fished from as a boy, and stood — one minute, he allowed himself, by the clock on the weigh-house he had grown up beneath — within two streets of his family’s door.\n\nAnd walked on.\n\nBecause the Gestapo knew his name, love. His earlier escapes, his record — his family had already paid instalments on him, and a knock on that door would have converted the debt to capital. The kindest thing a hunted son can do with his own street is cross it once, at dusk, on the far pavement, hat down, and let nobody in the lit windows ever know how close their boy stood to the glass.\n\nHe told me that walk took him four minutes and cost him more than the Pyrenees. I believe him. I once looked at a garden gate for four years, and mine was only latched, not forbidden.`,
+  choices:[
+    { t:'Walk it with him, the far pavement, hat down, the lit windows going by like paintings of a life. And keep walking.',
+      pre:'the door not knocked', fx:(S,P)=>{ award(P,'thedoor'); }, go:'n_v5' },
+    { t:'Stop on the bridge one breath longer, in the telling — the one liberty you take with his road, because somebody should.',
+      fx:(S,P)=>{ award(P,'thedoor'); }, go:'n_v5' },
+    { t:'Tell her what was in the windows: a lamp, a woman’s shoulder, the ordinary gold of an evening at home. The whole war, love, was fought over lamplight.',
+      fx:(S,P)=>{ award(P,'thedoor'); }, go:'n_v5' },
+    { t:'Let the ledger open early, just once: his family’s instalments, named plainly. The road runs THROUGH what it cost the people who loved him.',
+      fx:(S,P)=>{ award(P,'thedoor'); S.flags.earlyledger=1; }, go:'n_v5' },
+  ]},
+
+n_v5:{ region:'safehouse', reg:'ache', title:'The Rules of the Attic',
+  text:(S,P)=>`The first pair of hands was a schoolmistress with a house by the canal and a spare name for him before he was through the door. THE CHAIN, love — write the first link.\n\nThe rules of a safe house are a monastic order. Shoes off, always; a socked man makes a house sound empty. Never at the window, not even deep in the room — glass remembers silhouettes. The children were not told; children are honest, and honesty kills. He lived nine days in her attic like a held breath: meals carried up under mending, the wireless at whisper, a floor plank that had been mapped for him like a minefield — and below, every afternoon at four, the sound of her teaching arithmetic to eight-year-olds, in the voice of a woman with nothing whatsoever upstairs but hymn books.\n\nHe asked her once — whispered, on the ninth night — why. She looked at him the way schoolmistresses look at slow sums, and said: “Because you are somebody’s.” That was the entire catechism, and he carried it over the mountains and it holds up the whole relay to this day: because you are somebody’s.`,
+  choices:[
+    { t:'Keep every rule to the letter, all nine days — her house, her risk, her rules. Move on the first night the courier deems clean.',
+      pre:'the careful way', fx:(S,P)=>{ S.chain.push('the schoolmistress'); S.care=(S.care||0)+1; }, go:'n_v6' },
+    { t:'Stay the extra three days the weather argued for, though every extra day is her neck, and know it, and stay anyway.',
+      fx:(S,P)=>{ S.chain.push('the schoolmistress'); S.flags.stayedlong=1; }, go:'n_v6' },
+    { t:'Leave the attic exactly as found, plus one thing: the sum done right on the blackboard slate she kept up there. She would find it after. She would know what it meant.',
+      fx:(S,P)=>{ S.chain.push('the schoolmistress'); S.care=(S.care||0)+1; }, go:'n_v6' },
+    { t:'Give her catechism to the girl across the tablecloth, whole: because you are somebody’s. Watch it take root in the second column.',
+      fx:(S,P)=>{ S.chain.push('the schoolmistress'); }, go:'n_v6' },
+  ]},
+
+n_v6:{ region:'station', reg:'dread', title:'The Courier Girl',
+  text:(S,P)=>`The line moved him south the way the line moved everyone: behind a girl.\n\nNineteen, perhaps twenty. A beret, a shopping basket, and a set of nerves the RAF would have graded exceptional. Her work — her WEEKLY work, love, for strangers, for no pay, under a sentence that did not bother with trials — was to ride the trains beside men like him and make them invisible by loving them publicly: chattering, taking his arm at the checkpoints, feeding him pastry on the Brussels platform with the easy tyranny of a sweetheart, choosing the carriages, reading the uniforms three cars ahead. He spoke six words of her language. She never told him her name. Rule of the relay: never know more than the next pair of hands can survive you knowing.\n\nAt the last barrier, in Paris, with a Feldgendarm two travelers away, she straightened this stranger’s collar, kissed his cheek like a girl kissing four months of courtship goodbye, said something bright and endearing that he never understood — and walked away north, back up the line, to fetch the next one. He watched her hat until the crowd took it. Second link. Write her as he told her to me: the bravest soldier I ever stood beside, and I never learned her name.`,
+  choices:[
+    { t:'Do exactly as she arranged, every step, no improvements — a package has no opinions, and a good package keeps its courier alive.',
+      pre:'be the package', fx:(S,P)=>{ S.chain.push('the courier girl'); S.care=(S.care||0)+1; }, go:'n_v7' },
+    { t:'Break the rule once, in the telling as in the fact: turn at the barrier and mouth the only Dutch blessing he knew, to her back, uselessly, forever.',
+      fx:(S,P)=>{ S.chain.push('the courier girl'); }, go:'n_v7' },
+    { t:'Let the girl across YOUR table sit very still a moment, doing the arithmetic of nineteen-and-weekly. She puts the pencil down for this one.',
+      fx:(S,P)=>{ S.chain.push('the courier girl'); }, go:'n_v7' },
+    { t:'Say what the line’s people said of such girls after the war, when the accounts were opened: that the trains south ran on their nerve the way the Reich’s ran on coal.',
+      fx:(S,P)=>{ S.chain.push('the courier girl'); }, go:'n_v7' },
+  ]},
+
+n_v7:{ region:'safehouse', reg:'ache', title:'Every Country Had Its Inky',
+  text:(S,P)=>`Paris held him five weeks in the apartment of a priest who smelled of candle wax and cigarettes and fed him from a ration book that did not have him on it — which meant, he understood later, that for five weeks the priest halved his own bread.\n\nAnd in a back room off a courtyard he sat for a photographer-forger who was Inky to the bone — every country had its Inky, love; the trade’s masters found each other across the whole occupied map like organ builders — a Frenchman with arm-garters and a loupe who rebuilt him from Dutch electrician into French agricultural laborer, aging the new papers with lamp-smoke and a soft brush, complaining the entire time about the Reich’s new watermark the way craftsmen complain about weather. Third link, the priest. Fourth, the forger. The chain in her notebook is growing the shape all such chains grew: longer than anyone who was IN it ever knew.\n\nFive weeks of waiting is its own ordeal — the attic rules again, the counted floorboards, the church bells telling him the hours of a city he could not touch. He learned the priest’s chess weaknesses and exploited them without mercy. The priest, he said, forgave him sacramentally each evening and set the board up again.`,
+  choices:[
+    { t:'Wait the five weeks the careful way: the line moves when the line moves, and impatience is a luxury billed to other people’s necks.',
+      pre:'the line’s tempo', fx:(S,P)=>{ S.chain.push('the priest'); S.chain.push('the forger'); S.care=(S.care||0)+1; }, go:'n_v8' },
+    { t:'Give the priest his chess revenge in the telling — one won game, invented outright, because fifty years is long enough to owe a man a rook.',
+      fx:(S,P)=>{ S.chain.push('the priest'); S.chain.push('the forger'); }, go:'n_v8' },
+    { t:'Sit for the photograph with her: the moment a hunted face practices being nobody, in a borrowed collar, for the third identity in as many months.',
+      fx:(S,P)=>{ S.chain.push('the priest'); S.chain.push('the forger'); }, go:'n_v8' },
+    { t:'Note the halved bread, which he only worked out afterward — and which the priest, asked directly, denied on his honor as a bad liar.',
+      fx:(S,P)=>{ S.chain.push('the priest'); S.chain.push('the forger'); S.care=(S.care||0)+1; }, go:'n_v8' },
+  ]},
+
+n_v8:{ region:'night', reg:'dread', title:'The Line Rolls Up',
+  text:(S,P)=>`One night in the fifth week the priest woke him with a hand on the shoulder and no candle, and the whole grammar of the house had changed.\n\nThe line had been broken behind him. A safe house two links back — taken. The rule that no link knew more than the next was now the only wall between everyone he had touched and everything the Reich could do, and the rule was holding, but rules hold like shoring holds: you listen to them creak. He was moved before dawn, hand to hand, three addresses in nine days — a cellar, a laundry loft, a room behind a butcher’s cold store — while somewhere north the machinery worked back along the chain with its lists and its patience.\n\nIn the club, the girl’s pencil has stopped. “The schoolmistress,” she says. “The courier girl. Were they behind him? Were they in the part that was taken?” And here — I am honest with you as I was not always honest with myself — here is where I have always hurried the road: the mountains next, the crossing, get him HOME. She puts her hand flat on the second column. “At the end,” she says. It is not a question. At the end, love. All of it. I promised.`,
+  choices:[
+    { t:'Keep the rule even now, in the telling: he did not know, he COULD not know, and the not-knowing was itself the mercy the line built for its own.',
+      pre:'the rule holds', fx:(S,P)=>{ S.care=(S.care||0)+1; }, go:'n_v9' },
+    { t:'Move on the line’s word, at once, no questions — a package that asks after its handlers gets its handlers killed.',
+      fx:(S,P)=>{ S.care=(S.care||0)+1; }, go:'n_v9' },
+    { t:'Admit the temptation he confessed to me: to go back north. One night he stood with his boots in his hand at the cellar door. The line’s man said one sentence: “You would be the evidence.” He put the boots down.',
+      go:'n_v9' },
+    { t:'Hold her hand flat on the second column a moment, and repeat the promise, and feel what a contract with this particular reader weighs.',
+      go:'n_v9' },
+  ]},
+
+n_v9:{ region:'walk', reg:'ache', title:'Passeur Country',
+  text:(S,P)=>`South, then, by slow trains and farm carts, into the foothill country where France runs up against the wall of the Pyrenees and the war thinned out into weather.\n\nHe waited eleven days at a hill farm for the mountain window — a passeur does not argue with cloud — helping with the goats under a name nobody believed and nobody questioned, eating at a long table with a family who set his place as if hunted foreigners were a normal course of dinner, which, in that house, in that year, they were. The grandmother darned his socks and reinforced the heels double, because she had sent men over the mountains before and knew where the mountains spent them.\n\nThe guide, when he came, came at dusk: a smuggler by trade and inheritance, small, springy, sixty if a day, who looked at the party — our Dutchman, two American gunners, a French boy dodging the labor draft — the way Doc used to look down a column. He held up espadrilles, rope-soled, and said the whole briefing in one line of border French: “Boots lie on rock. These tell the truth. We go when the moon goes.”`,
+  choices:[
+    { t:'Take the espadrilles and the one-line gospel, and spend the wait learning the guide’s silences like a new instrument.',
+      pre:'when the moon goes', fx:(S,P)=>{ S.chain.push('the hill farm'); S.chain.push('the guide'); S.care=(S.care||0)+1; }, go:'n_v10' },
+    { t:'Write the grandmother into the chain with her double heels — logistics is love wearing overalls, and the ledger takes wool as well as blood.',
+      fx:(S,P)=>{ S.chain.push('the hill farm'); S.chain.push('the guide'); S.care=(S.care||0)+1; }, go:'n_v10' },
+    { t:'Sit the last dinner fully: the long table, the set place, the normal course of hunted men. Name what that family had decided ordinary decency was going to cost them, nightly, until liberation or denunciation.',
+      fx:(S,P)=>{ S.chain.push('the hill farm'); S.chain.push('the guide'); }, go:'n_v10' },
+    { t:'Ask the guide the camp question — WHY — and get the mountain answer: a shrug at the peaks, as if the Reich were a kind of weather it would be absurd to obey.',
+      fx:(S,P)=>{ S.chain.push('the hill farm'); S.chain.push('the guide'); }, go:'n_v10' },
+  ]},
+
+n_v10:{ region:'pyrenees', reg:'dread', title:'The Last Fence',
+  text:(S,P)=>`They went up when the moon went, and the mountains did what mountains do: they made the war small.\n\nFourteen hours in the dark and the scree, roped in pairs on the bad traverses, the guide counting his party at every halt by touch, like Doc at the barn doors — one, two, three, four, and a grunt that meant the world was still in order. Rain first, then sleet, then the thin singing cold of the high line where France and Spain are a matter of opinion and the only law that ever held up there was the passeur’s. One of the American boys sat down at four in the morning in the way you must never sit down, and our Dutchman — three escapes, four months, eleven checkpoints in his legs — hauled him up and walked him talking, TALKING, in English the boy could follow: airfields, baseball, the girl at home. Tiny’s method, love. Marrows by another name. The relay teaches the same things in every language, and what it teaches is: carry each other, and keep talking.\n\nAt first light the guide stopped on a saddle of grey rock, nodded south at a valley full of ordinary morning, and said the second of his two sentences of the entire crossing: “España.” Then he shook each man’s hand, formally, like a stationmaster — and turned back north into the weather, to fetch the next ones, the way the courier girl had walked back up the line. The chain’s last link, love, and like the first: pointing home the other way.`,
+  choices:[
+    { t:'Stand on the saddle a moment with the morning coming up out of Spain, and put the whole chain in order behind you, link by link, north to this rock.',
+      pre:'the last fence', fx:(S,P)=>{ if((S.care||0)>=3) award(P,'handtohand'); }, go:'n_v11' },
+    { t:'Watch the guide go back north until the weather takes him — the relay’s whole shape in one small springy figure walking INTO the war.',
+      fx:(S,P)=>{ if((S.care||0)>=3) award(P,'handtohand'); }, go:'n_v11' },
+    { t:'Carry the American boy’s thanks verbatim, as told at the reunion: “That crazy Dutchman talked me down a mountain in a language I barely had.” — Tiny’s method. It always holds.',
+      fx:(S,P)=>{ if((S.care||0)>=3) award(P,'handtohand'); }, go:'n_v11' },
+    { t:'Give her the guide’s two sentences complete, the entire crossing’s dialogue, and watch her rule a box around them like scripture.',
+      fx:(S,P)=>{ if((S.care||0)>=3) award(P,'handtohand'); }, go:'n_v11' },
+  ]},
+
+n_v11:{ region:'docks', reg:'elegy', title:'Gibraltar',
+  text:(S,P)=>`Spain was consulates and trains under guard and polite internment and paperwork — the war gone suddenly clerical — and then the Rock, grey and absurd and BRITISH, rising out of the sea haze like a filing cabinet of empire, and a Dakota home.\n\nIn London a wing commander with tired eyes took his debrief — the tunnel, the trains, the line, the mountains — writing steadily for two days. At the end the officer looked up and said the sentence they said to each of the three, the sentence I have already given you once tonight in another man’s ending: “You understand you are one of three.” And our Dutchman, who had crossed a continent on other people’s courage, gave the answer that belongs at the head of the ledger, and I have saved it four months of road for exactly this moment:\n\n“No, sir. One of three hundred. The other two hundred and ninety-seven stayed behind, and most of them I cannot name for you, and all of them knew the price better than I did.”\n\nThe wing commander, to his lasting credit, wrote it down.`,
+  choices:[
+    { t:'Now the second column. She turns the notebook so you can both see it, and takes up the pencil, and waits. Read the ledger of hands.',
+      pre:'what became of them', go:'n_v12' },
+    { t:'One breath first, at the Rock, with him: four months, one continent, no miles alone. Then the ledger. It is owed.',
+      go:'n_v12' },
+    { t:'Give the wing commander’s written line its full weight — one of three hundred — and then honor it the only way a telling can: by naming the three hundred’s stand-ins, one by one.',
+      go:'n_v12' },
+    { t:'She says, quietly, “Grandad would have liked him.” They met, love. 1948, this room. Two large men agreeing about vegetables. NOW the ledger.',
+      go:'n_v12' },
+  ]},
+
+n_v12:{ region:'club', reg:'elegy', title:'The Ledger of Hands',
+  text:(S,P)=>{
+    const links=(S.chain||[]).length;
+    return `So. The second column, love. As he learned it after the war, and as I had it from him, and as I give it now to your notebook — the whole relay, run to the end${links?` — ${links} links as we told them tonight, and the two we never could`:''}:\n\nTHE SCHOOLMISTRESS. ${S.flags.stayedlong?'Questioned twice in the autumn of ’44 — the extra days he stayed have sat on my conscience fifty years, though no line was ever drawn from them to her door — and released twice, arithmetic voice and all. ':'Questioned once, late in ’44, and released — the attic empty, the plank silent, the hymn books blameless. '}She taught until 1961. She died at ninety-four, love, in the town by the canal, and the men she hid — eleven, it came out; ELEVEN — subscribed for the headstone. It says, beneath her name: BECAUSE YOU ARE SOMEBODY’S.\n\nTHE COURIER GIRL. Taken at the Brussels station in the last summer of the war, on her forty-somethingth run, beside a package she did not betray. Deported. She did not come back. Her name IS known now — the line’s survivors saw to it after the war; it is on a wall in Brussels with her comrades’ — but he never learned it in life, by her own rule, and so in his tellings and in mine she is always and forever the courier girl, nineteen, straightening a stranger’s collar. The bravest soldier either of us ever stood beside.\n\nTHE PRIEST. Survived — barely; Fresnes prison, then the last train east that never quite left, liberation finding it at the platform. Went back to the same parish, the same chessboard. Halved his bread for strangers until there were no more strangers to halve it for, and died at his board in 1971, mid-game, winning.\n\nTHE FORGER. Never taken. Some craftsmen are too good for files. Retired into photography, weddings mostly, and is said to have remarked that brides hold still worse than fugitives.\n\nTHE HILL FARM. Denounced in the last winter — and warned, twenty minutes ahead, by the village policeman, who chose that morning which uniform he was actually wearing. The family scattered and the farm burned and every one of them lived, and after the war they went back and rebuilt it, and the grandmother’s double-heeled socks outlasted the Reich, which is the way I prefer to phrase the twentieth century when I am asked.\n\nTHE GUIDE. Crossed the mountains, by his own count, one hundred and some-odd times more. Lost two toes and no parties. The Alpine club of two nations put a plaque on a rock he is known to have spat at. He attended the unveiling, they say, and spat at it again, for continuity. Dead at ninety, in bed, facing — his family swears this — north.\n\nAND THE TWO NEVER NAMED. A man with a boat at a river crossing in Belgium, midnight, no words exchanged but a hand held out for the step. A woman at a window in Lille who saw him plainly in a doorway at curfew, looked at him a long moment — you know this look, love; it has been in one of my books before — and closed her shutters slowly, so slowly, the way you close a door on a sleeping child. For them the second column keeps two blank lines, and the blankness IS the entry: the relay ran on ten thousand of them, and the record holds perhaps a tenth, and the rest are what the word ANONYMOUS was invented to inadequately honor.\n\nShe finishes writing. She rules the ledger closed the way her grandfather used to seal a trap: flush, no seams. And then Tiny’s granddaughter, keeper of my tellings, does the thing I will be grateful for on my last evening in this world: she stands, and raises the glass of the man not present — to the second column entire.`;
+  },
+  choices:[
+    { t:'Stand with her. To the second column — the hands, named and nameless, that passed a man across a continent because he was somebody’s.',
+      pre:'to the second column', fx:(S,P)=>{ award(P,'ledger'); }, end:'e_relay' },
+    { t:'Add the toast the Dutchman himself used, every reunion, first glass, without fail: “To the people whose names I do not know. May somebody, somewhere, be standing for them tonight.”',
+      fx:(S,P)=>{ award(P,'ledger'); }, end:'e_relay' },
+    { t:'Leave the two blank lines showing as you raise the glass — the notebook open on the table, facing the room, like a door left on the latch.',
+      fx:(S,P)=>{ award(P,'ledger'); }, end:'e_relay' },
+    { t:'Say the schoolmistress’s catechism one last time, for the whole chain at once, and let it be the toast entire: because you are somebody’s.',
+      fx:(S,P)=>{ award(P,'ledger'); }, end:'e_relay' },
+  ]},
+
 };
 
 /* ======================================================================
@@ -1026,6 +1202,10 @@ e_horse:{ kind:'home', art:'horse', title:'The Ones Who All Came Home',
   text:(S,P)=>`That is the horse, told to the end, the way it went: no flinches${(P.endings&&P.endings.e_horse)?' — or fewer, anyway; she keeps the ledger on that too':''}, no list, no remainder. The neat, small, perfect one. History did it once, just once, right next door to the worst of it, in the same sand, under the same towers, the same autumn — as if to leave a proof in the margin: the problem was never impossible. It was only expensive.\n\nThe three of them wrote it all down after the war, and men of my book read it the way you read a letter from a better timeline. I met one of them, once, as I said, in 1947, and what I remember best is his hands around the soda water: steady as a bench vice. “The horse was the easy part,” he told me. “The hard part was believing, every day, for three months, that a thing that daft was allowed to work.” That is the sentence I have carried out of that bar for fifty years, love, and I hand it to you now with the notebook: the daft thing is allowed to work.\n\nAt the club, last orders called and ignored, she reads the horse’s pages back to me in order — the idea, the rota, the heel, the ditch, the three boats — and I sit with my eyes shut listening to my borrowed escape in her voice, and every man in it lives, every time, and the light passes, and they get up, and they walk.`,
 },
 
+e_relay:{ kind:'home', art:'pyrenees', title:'The Relay',
+  text:(S,P)=>`Three books now, love, and she has all of them: the one where the digging cost everything, the one where the daft thing was allowed to work, and this one — the one that is not an escape story at all, because nobody escapes alone. Nobody ever escaped alone. The tunnel was six hundred men; the horse was a compound; and the long way round was a continent of lamplit kitchens deciding, one stranger at a time, that decency outranked survival.\n\nHe went back, you know. The Dutchman. After the war, with his wife — the whole road in reverse, north from the mountains, farm by farm, house by house, finding the hands. Some he found. Some had left no address in this world. At the hill farm they set his place at the long table as if he had stepped out for an hour; at the canal town he stood at last on his own street, in daylight, hat OFF; and on a saddle of grey rock in the Pyrenees he left, wedged where a guide is known to have spat, a pair of rope-soled espadrilles, worn once, size irrelevant. The plaque people never understood it. The mountain people did.\n\nAt our table the candles are low and the staff have given up on us beautifully. She closes the notebook on the ledger of hands and holds it to her chest the way you hold what you intend to keep. Three books. All of it told. And somewhere under Silesia, a tunnel named after my aircraft is still holding, flush to the frame, in the dark, going nowhere, carrying everything.`,
+},
+
 e_pause:{ kind:'pause', art:'club', title:'The Telling Pauses',
   text:`In the club, the girl looks up from the tablecloth where she has been writing feet with her finger.\n\n“That’s not an ending,” she says, quite rightly.\n\nNo. That is where a man puts a bookmark. The rest of it wants a steadier glass than this one, and the club does not close till late.` },
 
@@ -1049,6 +1229,7 @@ const her = {
   e_roll:`She stands when I stand. Every chair at that table that still has a man in it stands.`,
   e_pause:`“Next time,” she says, “no bookmark.”`,
   e_horse:`“And you always catch the boat?” Every time, love. In this one, everybody always catches the boat. “Good,” she says, and writes it in the notebook under the ledger, in capitals, like a course confirmed: ALL THREE.`,
+  e_relay:`At the door, coat on, she stops. “The two blank lines,” she says. “I’m leaving them blank in mine too. But I’m ruling the box around them in ink.” In ink, love. That is exactly the trade: the names we lose, the box we keep.`,
 };
 
 /* ---------------- helpers used by choices (engine binds award/logSee) -- */
@@ -1102,6 +1283,7 @@ const afterword = `<h3>The Fifty</h3>
 <p>On Hitler’s personal order, <b>fifty of the recaptured officers were murdered by the Gestapo</b> — taken from prisons in small groups, driven to roadsides and fields, and shot, the files claiming escape attempts that never happened. Among them were Roger Bushell, shot near Saarbrücken, and Flight Lieutenant <b>Tim Walenn</b>, the gentle master forger of “Dean & Dawson,” who went half-blind making other men’s papers. The urns came back to Sagan by rail. The prisoners were permitted to build a memorial vault in the pines down the Sagan road. It stands there today, and it is tended.</p>
 <p><b>Three men reached home:</b> the Norwegians Per Bergsland and Jens Müller, by train to Stettin and ship to Sweden, and the Dutch pilot Bram van der Stok, the long way through France to Spain. Wally Floody, the Canadian mining engineer who built the tunnels, was purged to another compound weeks before the escape — the Tunnel King never went down Harry, and it saved his life. Kommandant Friedrich Wilhelm von Lindeiner-Wildau, who had run his camp like a soldier of the old school, was arrested and court-martialed for it. The chief ferret, Hermann Glemnitz, whose craftsmanship the prisoners genuinely respected, attended their reunions after the war, and was welcome.</p>
 <p>After the murders, the prisoners of North Compound began one more tunnel, under the theater. It went nowhere in particular. It was insurance, and defiance, and — as the camp doctors understood better than anyone — medicine. Its real name was <b>George</b>.</p>
+<p><b>Book Three is true as well.</b> Flight Lieutenant <b>Bram van der Stok</b>, the Dutch Spitfire pilot, left Harry eighteenth on the night of the Great Escape and reached Gibraltar in July 1944 — by train across Germany, through his own occupied Holland, then Belgium, France and the Pyrenees, passed from hand to hand by the escape lines and by civilians whose names were often never known. The helpers were real and the price was real: the escape networks — the Comet Line among them — were run largely by young volunteers, many of them women in their teens and twenties, and hundreds of helpers were arrested, deported or executed for passing Allied airmen home. Every helper in this book is a composite standing for them. Van der Stok became the most decorated aviator in Dutch history; his mother, and others of his family, paid for his defiance in ways this game keeps offstage, as he largely did.</p>
 <p><b>Book Two is true as well.</b> In October 1943, months before the Great Escape, three officers of the East Compound — <b>Eric Williams, Michael Codner and Oliver Philpot</b> — escaped through a 100-foot tunnel dug from beneath a vaulting horse placed daily near the wire, the vaulting masking the work from the seismograph microphones. All three reached Sweden and home: Williams and Codner by ship from Stettin, Philpot — travelling as a Norwegian margarine salesman — via Danzig. No one was recaptured and no one died. Williams told the story in <em>The Wooden Horse</em> (1949). The narrator of this game was never among them; that borrowing is the fiction's own, and openly confessed.</p>
 <p>In January 1945 the camp was marched west through blizzard ahead of the Soviet advance — the Long March — and liberated in the spring.</p>
 <p><em>The characters in this game are inventions wearing the true events. The names in this story were changed. These were the real ones. If the game sent you here wanting more, the record is rich: the escapers themselves wrote it down, and the fifty names are read aloud at RAF stations to this day.</em></p>

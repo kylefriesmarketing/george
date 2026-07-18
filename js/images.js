@@ -6,7 +6,8 @@
 const IMAGES = (() => {
   const keys = new Set(['title','club','fire','gate','compound','tunnel','theater',
     'hole','list','marchw','docks','sand','hut104','home','night','winter',
-    'silk','dulag','scheme','cooler','appell','vault','horse','inhorse']);
+    'silk','dulag','scheme','cooler','appell','vault','horse','inhorse',
+    'canal','safehouse','pyrenees']);
   return {
     has: k => keys.has(k),
     url: k => 'assets/scenes/' + k + '.jpg',

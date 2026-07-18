@@ -306,6 +306,48 @@ home(r){ let s=wash(r,'#a8c2b8','#9cb8ad');
   s+=E(226,122,2.4,2.8,'#6a4a52',.9)+R(223,125,5.6,11,'#6a4a52',.9); /* two figures, close */
   return s; },
 
+canal(r){ let s=wash(r,'#5a6478','#4f5a6e');
+  s+=E(160,40,120,26,'#8a92a4',.25);
+  /* gabled houses along the canal */
+  for(let i=0;i<6;i++){ const x=10+i*52, h=44+r()*22;
+    s+=R(x,96-h,44,h+8,'#3a3f4c',.95)
+      +`<path d="M${x-2} ${96-h} L${x+22} ${96-h-16} L${x+46} ${96-h} Z" fill="#2c313c"/>`;
+    for(let k=0;k<2;k++) s+=R(x+8+k*20,104-h+8,10,13,(r()<.4?'#d8a24a':'#232732'),(r()<.4?.5:.9)); }
+  s+=R(0,104,320,10,'#454c5c'); /* quay */
+  s+=R(0,114,320,66,'#232a38'); /* the canal */
+  for(let i=0;i<8;i++) s+=L(20+i*40,120+r()*40,50+i*40,120+r()*40,'#39435a',1.2,.6);
+  s+=E(96,130,20,3,'#d8a24a',.14)+E(200,142,26,4,'#d8a24a',.10); /* window light on water */
+  s+=`<path d="M130 114 C 150 96, 190 96, 210 114" stroke="#3a3f4c" stroke-width="5" fill="none"/>`; /* the bridge */
+  s+=E(258,98,2.6,3,P.ink,.95)+R(255,101,6,11,P.ink,.95); /* the man on the far pavement, hat down */
+  return s; },
+
+safehouse(r){ let s=R(0,0,320,180,'#2c2418');
+  s+=`<path d="M0 40 L160 4 L320 40 L320 180 L0 180 Z" fill="#3a2f1e"/>`; /* attic slope */
+  for(let i=0;i<7;i++) s+=L(20+i*45,10+Math.abs(i-3)*8,20+i*45,180,'#463a24',2,.5); /* rafters */
+  s+=R(128,60,46,34,'#191d26')+L(128,77,174,77,'#5c4c30',2)+L(151,60,151,94,'#5c4c30',2); /* the window, kept from */
+  s+=E(151,77,26,20,'#8a92a4',.08);
+  s+=R(40,130,70,26,'#4a3a22')+R(46,124,58,8,'#57462a'); /* low bed */
+  s+=E(74,120,2.8,3.2,'#d8ccb0',.9)+R(70.6,124,6.8,12,'#5c4c30',.95); /* the hidden man, sitting */
+  s+=E(96,150,7,4,'#3a2f1e',.9)+E(110,152,6,3.5,'#3a2f1e',.9); /* shoes off, by the bed */
+  s+=E(226,132,6,7,'#d8a24a',.5)+E(226,132,3,4,'#f0c060',.7)+R(222,139,9,4,'#5c4c30'); /* small lamp */
+  s+=E(160,160,120,16,'#000',.25);
+  return s; },
+
+pyrenees(r){ let s=wash(r,'#1a2230','#141b28');
+  for(let i=0;i<26;i++) s+=E(r()*320,r()*60,.7,.7,P.snow,.3+r()*.4);
+  s+=`<path d="M0 120 L60 44 L110 96 L170 28 L230 88 L290 52 L320 84 L320 180 L0 180 Z" fill="#232c3c"/>`;
+  s+=`<path d="M60 44 L74 62 L48 62 Z M170 28 L186 50 L156 50 Z M290 52 L302 68 L278 68 Z" fill="#e8e4d6" opacity=".8"/>`; /* snowcaps */
+  s+=`<path d="M0 150 L80 118 L160 142 L240 108 L320 132 L320 180 L0 180 Z" fill="#1b2230"/>`;
+  s+=`<path d="M40 160 C 100 140, 180 132, 260 112" stroke="#38445a" stroke-width="2" fill="none" stroke-dasharray="3 5" opacity=".8"/>`; /* the track */
+  /* the roped party */
+  const px=[96,124,152,180];
+  px.forEach((x,i)=>{ const y=146-i*6;
+    s+=E(x,y-6,2.4,2.8,'#0d1118',.95)+R(x-2.2,y-3.6,4.4,9,'#0d1118',.95);
+    if(i<3) s+=L(x+2,y+2,px[i+1]-2,y-4,'#5a5340',1,.8); });
+  s+=E(206,132,2.6,3,'#0d1118',.95)+R(203.4,135,5.2,8,'#0d1118',.95); /* the guide, ahead, smaller */
+  s+=E(160,30,16,16,'#e8e4d6',.06);
+  return s; },
+
 horse(r){ let s=wash(r,'#9db0bd','#93a7b6');
   s+=pines(r,44,P.pine,14)+fence(r,66,34);
   s+=R(0,110,320,70,P.soil)+E(160,140,150,20,P.soild,.4);
