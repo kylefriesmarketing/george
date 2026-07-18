@@ -205,6 +205,26 @@ mobile deep-pass (works, untuned).*
 - [x] **GATE:** 24/24 + soak green + rename persistence + roll-with-her-line all DOM-verified;
       console clean; deployed.
 
+## M7 — BOOK TWO: THE HORSE — ✅ DONE 2026-07-18 (checklist below as built)
+
+The true Wooden Horse escape (East Compound, same camp, autumn '43 — three out, ALL THREE
+home), told by our narrator as the camp legend he has imagined himself into ever since.
+**The license inverts**: history here is fixed as SUCCESS, so the dark branches are the
+narrator flinching — and the granddaughter interrupts and corrects the record ("That's not
+how it went"), and the telling rights itself. Wrong-is-a-branch, not an ending.
+
+- [x] 12 nodes + 2 flinch interrupts + `e_horse` (kind home) + her line ("ALL THREE").
+- [x] Gated club entry (req one prior telling); tunnel bar horse variant (100 ft, "from the
+      horse"), scripted to 100 at the break like Harry's 336.
+- [x] +3 Mentions (registry now 27); soak seeds half its runs as retellings — e_horse hit
+      202/2000 in soak; both flinch paths verified correcting back to the record.
+- [x] 2 new scenes (4cr) + procedural fallbacks; afterword gained the true Wooden Horse
+      paragraph (Williams/Codner/Philpot, the borrowing openly confessed).
+- [x] **BONUS ENGINE FIX the gate caught:** stale choice buttons could re-fire an ending on
+      double-click (inflating runs + journal) — ending() now clears #choices.
+- [x] **GATE:** soak green, straight + flinch + deeds walks green, one-journal-entry-per-
+      telling verified, console clean, deployed.
+
 ---
 
 **Order of battle if a session is short:** M0+M1 are one sitting (the slice proves the voice).

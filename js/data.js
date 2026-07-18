@@ -36,6 +36,8 @@ const regions = {
   list:    { name:'The List',                         ch:7, art:'list' },
   vault:   { name:'The Memorial in the Pines',        ch:7, art:'vault' },
   agency:  { name:'Dean & Dawson — the Travel Agency', ch:5, art:'dulag' },
+  horse:   { name:'East Compound — the Vaulting Horse', ch:4, art:'horse' },
+  inhorse: { name:'Inside the Horse',                  ch:4, art:'inhorse' },
   garden:  { name:'The Garden — 1944',                ch:8, art:'tunnel' },
   marchw:  { name:'The Road West — January ’45',      ch:8, art:'marchw' },
   home:    { name:'Home',                             ch:8, art:'home' },
@@ -85,6 +87,9 @@ const mentions = {
   bringthem:{ t:'All Answering at the Barns', hint:'Bring your people through the road west.' },
   stockholm:{ t:'Arrived, Course as Plotted', hint:'A home run — anyone’s.' },
   silence:  { t:'The Week the Music Stopped', hint:'Stand at the wall and read every name.' },
+  vaulter:  { t:'Twenty a Day',              hint:'Take every vaulting shift in Book Two.' },
+  flush:    { t:'Flush to the Frame',        hint:'Reseal the trap so well the horse itself would approve.' },
+  allthree: { t:'All Three',                 hint:'Catch the boat. Everyone catches the boat.' },
   nonames:  { t:'No Names, No Pack Drill', hint:'Give the interrogator nothing — twice.' },
   watcher:  { t:'Eyes Open',               hint:'Learn the wire before you touch it.' },
   firstsand:{ t:'First Sand',              hint:'Carry your first bag down a trouser leg.' },
@@ -126,6 +131,9 @@ n_club:{ region:'club', reg:'elegy', title:'More Chairs Than Men',
       fx:(S,P)=>{P.frame='toast';}, go:'n_fire' },
     { t:'Warn her: it is a funny story almost the whole way. That is the part nobody believes.',
       fx:(S,P)=>{P.frame='funny';}, go:'n_fire' },
+    { t:'She closes the notebook. “Tell me the other one tonight. Grandad’s favorite — the one about the horse.” The one from next door. The one that worked clean.',
+      pre:'book two: the horse', req:(S,P)=>P.runs>=1,
+      go:'n_h1' },
     { t:'Tonight the secretary reads the roll at nine — and tonight, for the first time, you know all of it. Every man, told to the end. Stand, and answer.',
       pre:'★ the log is complete', req:(S,P)=>logComplete(P),
       fx:(S,P)=>{ award(P,'perardua'); }, end:'e_roll' },
@@ -800,6 +808,168 @@ n_home:{ region:'home', reg:'elegy', title:'The Boat',
       end:(S,P)=>S.flags.marchAll?'e_garden':'e_roadwest' },
   ]},
 
+/* ======================================================================
+   BOOK TWO — THE HORSE (the Wooden Horse, told as the camp's legend)
+   The license inverts here: this history is fixed as SUCCESS, so the
+   dark branches are the narrator flinching — and she corrects the record.
+   ====================================================================== */
+
+n_h1:{ region:'club', reg:'elegy', title:'The One That Worked Clean',
+  text:(S,P)=>`Grandad’s favorite. Of course it was. He heard it the same day I did, at the same wire.\n\nAutumn of ’43, while we in North Compound were watching Tom die and starting to bury our hopes in Harry, something was going on next door in East Compound that none of us knew about — the neat, small, perfect one. The one with three men out and not a name on any list afterward. The one where everybody catches the boat.\n\nI wasn’t there. I want that said before the soup: I had it over the wire in whispers like everyone else, and later from one of the three himself, at a bar in London in 1947, in exchange for the price of the drinks, which I have always considered the best contract of my life. So what follows is partly his, partly the wire’s, and partly fifty years of mine — because in my telling, love, I am the third man. I have always been the third man. An old prisoner is allowed one borrowed escape, and this one is mine.`,
+  choices:[
+    { t:'Tell it the way the wire told it first: in whispers, over three evenings, too good to be true and true anyway.',
+      fx:(S,P)=>{S.flags.htell='wire';}, go:'n_h2' },
+    { t:'Tell it the way the man in the bar told it: dry as a timetable, funnier for that, buying nothing but his own soda water.',
+      fx:(S,P)=>{S.flags.htell='bar';}, go:'n_h2' },
+    { t:'Tell it the way you have improved it since: from inside. First person. The borrowed escape, worn openly.',
+      pre:'the third man', fx:(S,P)=>{S.flags.htell='inside';}, go:'n_h2' },
+    { t:'Start with the joke, because it IS a joke: the Reich, undone next door by gymnastics.',
+      fx:(S,P)=>{S.flags.htell='joke';}, go:'n_h2' },
+  ]},
+
+n_h2:{ region:'horse', reg:'lark', title:'A Present From the Greeks',
+  text:(S,P)=>`Two young lieutenants in East Compound looked at their problem — a hundred-odd feet of open ground between the huts and the wire, over sand that sang to buried microphones — and reasoned their way to the single most beautiful idea of the war:\n\nif the tunnel cannot start near the wire, the ENTRANCE must walk there. Daily. In public. With the Germans watching.\n\nSo they proposed a vaulting horse. A big plywood box-horse, Red Cross crates and stolen screws, carried out to the same spot by the wire every morning for healthful exercise, vaulted over for hours by relays of officers — with a man folded up INSIDE it, digging. Trap resealed flush and buried before the horse came home each evening. The tunnel would live its whole life under the enemy’s daily inspection, protected by the one force the Reich had no answer to: the sheer embarrassment of the idea.\n\nTheir committee, I am told, laughed for a full minute. Then it went very quiet, in the way of committees that have just heard something workable.`,
+  choices:[
+    { t:'Volunteer — in the telling — for the digging. Small men fold better, and you have been fitting into aircraft all war.',
+      pre:'the man inside', feet:2, fx:(S,P)=>{S.tun='horse'; S.feet=0; S.flags.tunnelRevealed=1; S.flags.hrole='digger';}, go:'n_h3' },
+    { t:'Volunteer for the vaulting. Somebody has to be terrible at gymnastics on purpose, hours a day, for the Reich’s benefit.',
+      pre:'the cover', fx:(S,P)=>{S.tun='horse'; S.feet=0; S.flags.tunnelRevealed=1; S.flags.hrole='vaulter'; S.hv=(S.hv||0)+1;}, go:'n_h3' },
+    { t:'Ask the question the committee asked: what happens the day a ferret tips the horse over? — and hear the answer: “Then we applaud the gymnasium for its discipline.”',
+      fx:(S,P)=>{S.tun='horse'; S.feet=0; S.flags.tunnelRevealed=1;}, go:'n_h3' },
+    { t:'Let her stop you: “Wait. They dug it in the OPEN? By the WIRE?” Yes, love. That is the whole joke, and it took the Reich three months not to get it.',
+      fx:(S,P)=>{S.tun='horse'; S.feet=0; S.flags.tunnelRevealed=1;}, go:'n_h3' },
+  ]},
+
+n_h3:{ region:'horse', reg:'lark', title:'Physical Culture',
+  text:(S,P)=>`The horse went out after morning appell and the compound discovered a passion for physical culture that would have made a Prussian schoolmaster weep.\n\nFour men carried it — which was the first tell nobody caught, because an empty plywood horse does not need four men, but a horse with a digger and his tools and, later, twelve bags of wet sand inside it certainly does. The vaulters vaulted. Some were good. The best were bad — deliberately, artistically bad, men who could take a tumble that drew every eye in every tower while below their thumping feet a trap was being lifted on a tunnel eighteen inches down.\n\nThe vaulting was everything. It masked the digging from the microphones; it explained the horse; it explained the same spot, every day, by the wire. The cover was not beside the operation. The cover WAS the operation. Doc would have prescribed it by the hour.`,
+  choices:[
+    { t:'Take every vaulting shift going — in the telling, your knees remember it yet. Twenty a day, badly, beautifully.',
+      pre:'twenty a day', fx:(S,P)=>{S.hv=(S.hv||0)+2;}, go:'n_h4' },
+    { t:'Organize the rota like the firm would: stooges among the vaulters, a signal set, injuries staged in advance and filed for later use.',
+      fx:(S,P)=>{S.hv=(S.hv||0)+1;}, go:'n_h4' },
+    { t:'Carry the horse. Four men, one gait, no grunting on the heavy days — the walk itself was a performance with lives in it.',
+      fx:(S,P)=>{S.hv=(S.hv||0)+1;}, go:'n_h4' },
+    { t:'Perfect the artistic tumble: the full-eyes-of-the-tower special, with a bounce. She laughs. Fifty years on, it is still a reliable house.',
+      fx:(S,P)=>{S.hv=(S.hv||0)+1;}, go:'n_h4' },
+  ]},
+
+n_h4:{ region:'inhorse', reg:'dread', title:'Inside',
+  text:(S,P)=>`Now the other half, the half the compound never saw. You are folded into a plywood box in your underclothes with a bowl to dig with, bags for the spoil, and a margarine lamp you mostly don’t light because air is the actual currency. Above your head, boots. All day, boots — the thud and shake of grown men landing on your ceiling, on purpose, on schedule, to keep you inaudible.\n\nThe shaft went down five feet under the horse’s belly, and the trap that closed it was the masterpiece: boards, then grey blended sand tamped flush, then the topsoil combed back over, all of it done lying down, in the dark, by feel, to a finish that had to survive a ferret’s probe and a hundred vaulters’ heels. Every evening the horse was carried home heavier than it went out, and every evening the ground by the wire looked like nothing at all.\n\nA hundred feet, dug with a bowl, by a man in a box being jumped on. When people tell me the age of miracles is past, I think of the horse coming home at dusk with Germany inside it.`,
+  choices:[
+    { t:'Do the reseal yourself, in the telling: the blend, the tamp, the comb — flush to the frame, every single dusk, no exceptions ever.',
+      pre:'flush to the frame', feet:20, fx:(S,P)=>{ award(P,'flush'); }, go:'n_h5' },
+    { t:'Dig like Zabek taught the other compound: fear answers to work; push the bowl.',
+      feet:26, go:'n_h5' },
+    { t:'Bag the spoil wet and heavy and curse it lovingly — every pound rides home inside the horse tonight, between your knees.',
+      feet:22, go:'n_h5' },
+    { t:'Spend one shift just listening to the boots overhead and understanding, completely, that other men’s effort is the roof over you.',
+      feet:16, fx:(S,P)=>{ if(S.nv.hero>0)S.nv.hero--; }, go:'n_h5' },
+  ]},
+
+n_h5:{ region:'horse', reg:'ache', title:'The Long Gymnasium',
+  text:(S,P)=>`Three months, that operation ran. July to October, every digging day the same play performed twice daily to an audience of towers.\n\nIt cost what such things cost. Backs went, and knees. The vaulters vaulted through sprains because a rest day was a tunnel day lost. The diggers came out of the horse grey and folded, men being unpacked rather than emerging, and had to walk away casually — CASUALLY — with a hundred feet of cramp in each leg. The autumn came on and the daylight shortened and the arithmetic of dusk against appell got thinner every week.\n\nAnd the sand crept forward, bowlful by bowlful, under the microphones, under the probes, under the boots of the Reich — eighteen inches down, which is nothing, which is a floor’s thickness between a man and discovery, all the way toward the wire.`,
+  choices:[
+    { t:'Vault through the sprain like they did. In the telling your ankle still clicks in cold weather, and you are proud of a fictional ankle.',
+      pre:'the rota holds', feet:18, fx:(S,P)=>{S.hv=(S.hv||0)+1;}, go:'n_h6' },
+    { t:'Mark the tunnel’s progress each night on a mental map of the compound, pacing it off above ground, casually, hands in pockets.',
+      feet:20, go:'n_h6' },
+    { t:'Tell her about the unpacking of the diggers — the two men lifting you out folded, and the art of the casual walk with dead legs.',
+      feet:16, go:'n_h6' },
+    { t:'Note what she notes, pencil poised: “Nobody’s name is on a list in this one.” Not in this one, love. Keep reading.',
+      feet:18, go:'n_h6' },
+  ]},
+
+n_h6:{ region:'inhorse', reg:'dread', title:'The Heel',
+  text:(S,P)=>`Of course there was a day. There is always a day.\n\nA stretch of tunnel ran shallow — eighteen inches is a guess in the dark, and guesses vary — and one afternoon a vaulter came down from a good honest leap and his heel went THROUGH. Through the turf, through the ceiling, into the tunnel, with a digger at the face forty feet beyond and two towers watching the gymnasium at their leisure.\n\nWhat happened next took four seconds and I have heard it described by a man who was there and I still don’t fully believe the speed of it: the vaulter collapsed on the hole, clutching his knee, roaring — the staged injury, filed months before, produced at sight — and the whole gymnasium converged on him in a concerned crowd that was also, precisely, a screen, while two men knelt IN the crowd and packed the hole under the cover of a rolled jacket and a water bottle and the Reich’s own first-aid instincts. They carried him off moaning. He winked at the horse as he went by.`,
+  choices:[
+    { t:'Stay with what happened: the crowd, the jacket, the packed hole, the wink. Four seconds of the best theater the war produced.',
+      pre:'as it went', feet:8, go:'n_h7' },
+    { t:'Be the roaring man, in the telling. You always are. The knee performance has improved every year since 1947.',
+      feet:8, fx:(S,P)=>{S.hv=(S.hv||0)+1;}, go:'n_h7' },
+    { t:'Let her feel the forty feet: a digger, underground, hearing the ceiling open behind him and the daylight come in. And then boots. And then dark again, repacked. And he stayed. And he kept digging.',
+      feet:8, go:'n_h7' },
+    { t:'Some nights the heel goes through and the ferret is standing right there, and the whole clean story ends in that turf—',
+      pre:'the flinch', go:'n_hf1' },
+  ]},
+
+n_hf1:{ region:'club', reg:'elegy', title:'She Corrects the Record',
+  text:(S,P)=>`“No,” she says.\n\nJust that, first. Her hand flat on the notebook, my glass stopped halfway. The whole club quiet around us in that particular after-nine hush.\n\n“That’s not how it went. You told me yourself — no ferret, the crowd, the jacket, the wink. It WORKED.” She looks at me the way her grandfather looked at a man dealing himself bad cards. “You do this. When a story’s too good, you flinch it. You deal them the number, or the torch, or the ferret, because you don’t trust clean luck even fifty years later. Well — this one’s mine as much as yours now, and in mine it goes the way it WENT.”\n\nShe turns the notebook around. She has been keeping the horse’s ledger in the margin, feet dug, like a professional.`,
+  choices:[
+    { t:'Stand corrected. Gratefully. Take the telling back up at the crowd, the jacket, the wink — as it went.',
+      pre:'as it went, then', go:'n_h7' },
+    { t:'Tell her why you flinch: because the other book taught you what luck usually costs. Then tell this one straight anyway.',
+      go:'n_h7' },
+    { t:'Say what you have never said: that the horse is the story you keep BECAUSE it needs no flinching. The one clean room in the house.',
+      go:'n_h7' },
+    { t:'Laugh — properly, for the first time tonight — at being edited by Tiny’s granddaughter, and surrender the pencil for good.',
+      go:'n_h7' },
+  ]},
+
+n_h7:{ region:'horse', reg:'dread', title:'Three Men and the Dusk',
+  text:(S,P)=>`By late October the tunnel was under the wire and the arithmetic said now: the nights drawing in fast enough that a dusk break could beat the count, the ground not yet frozen, the papers ready.\n\nTwo had earned it beyond argument — it was their idea, their tunnel, their three months in the box. They took a third man for the final push, a digger who had carried the back half of the work${S.flags.htell==='inside'?' — and in my telling, as I have confessed, that third pair of boots is mine':''}. The last day the horse went out twice, and the vaulting was the best and worst ever staged, because every man jumping knew, and had to jump like a man who didn’t.\n\nThe plan was simple the way a blade is simple: seal the diggers in at the evening session, carry the horse home light, answer the count with two rigged blanket-dummies — and at full dusk, break the last two feet, come up in the ditch beyond the wire, and walk to the railway station dressed as foreign workers, on papers grown in another compound’s garden.`,
+  choices:[
+    { t:'Take the last vaulting session yourself, in the telling — jump the lie clean, twenty a day to the very end.',
+      pre:'the last cover', feet:18, fx:(S,P)=>{S.hv=(S.hv||0)+1; if((S.hv||0)>=4) award(P,'vaulter');}, go:'n_h8' },
+    { t:'Be sealed in. Three men and a candle in a hundred feet of dark, waiting for the light over Germany to die.',
+      pre:'the wait at the face', feet:18, fx:(S,P)=>{ if((S.hv||0)>=4) award(P,'vaulter'); }, go:'n_h8' },
+    { t:'Walk the compound one last time above them, pacing the line of the tunnel, hands in pockets, saying the miner’s rule down through the ground: hurry is what kills.',
+      feet:18, fx:(S,P)=>{ if((S.hv||0)>=4) award(P,'vaulter'); }, go:'n_h8' },
+    { t:'Let her hold the count with you: a hundred feet dug, two dummies in two bunks, and the dusk coming down like a curtain being lowered by hand.',
+      feet:18, fx:(S,P)=>{ if((S.hv||0)>=4) award(P,'vaulter'); }, go:'n_h8' },
+  ]},
+
+n_h8:{ region:'night', reg:'dread', title:'The Ditch',
+  text:(S,P)=>`At full dark the last two feet came away like a cork.\n\nCold air, wet grass, the ditch — and the wire BEHIND them, which is a sentence I have needed fifty years to say about anyone without my chest doing something complicated. Three men in the ditch in workmen’s clothes, boots in their socks, faces down while the tower light made its slow indifferent pass, and then up and WALKING — not running; walking, casually, murderously casually, down the road any worker might use, toward the lit windows of Sagan station.\n\nBehind them the count had already come right: two dummies asleep in two bunks, the horse innocent in its shed, the trap flush to the frame under combed topsoil. The Reich would not know for a night and half a day that East Compound was three men light. By then there would be a great deal of Baltic involved.`,
+  choices:[
+    { t:'Walk it with them, step for step, the whole quarter-mile — the longest casual walk in the history of legs.',
+      pre:'murderously casual', fx:S=>{S.feet=100;}, go:'n_h9' },
+    { t:'Give her the detail the man in the bar gave you: they could hear the camp’s evening — a gramophone, a shout of laughter — carrying over the wire at their backs, and none of them looked round.',
+      fx:S=>{S.feet=100;}, go:'n_h9' },
+    { t:'Stop at the ditch a moment, in the telling, and put your palm flat on the cold turf, the way you once touched a hatch ceiling. Two feet. Always two feet.',
+      fx:S=>{S.feet=100;}, go:'n_h9' },
+    { t:'And some nights the tower light catches an elbow at the lip of the ditch, and the whole thing ends in the wet grass ten feet out—',
+      pre:'the flinch, again', fx:S=>{S.feet=100;}, go:'n_hf2' },
+  ]},
+
+n_hf2:{ region:'club', reg:'elegy', title:'She Keeps the Wheel',
+  text:(S,P)=>`This time she doesn’t say no. She just looks at me, and waits, with her pencil down flat like a rank of men refusing an order — and I hear it myself, in the silence: the flinch, arriving on schedule, trying to deal three walking men a searchlight they never got.\n\n“They’re in the ditch,” she says at last, evenly, like a navigator reading back a course. “The light passes. They get up. They walk. Say it.”\n\nThe light passes. They get up. They walk.\n\n“Again.”\n\nThe light passes, love. They get up. They walk. All the way to the station, and nothing in the Reich so much as turns its head. She picks the pencil back up. “Thank you,” she says, and we proceed, under new management.`,
+  choices:[
+    { t:'Proceed. Under new management. To the station.',
+      pre:'the light passes', go:'n_h9' },
+    { t:'Tell her she reads back a course exactly like a man she never met read them over Essen. Watch that land somewhere deep.',
+      crew:1, go:'n_h9' },
+    { t:'Admit the size of the gift: fifty years of flinching, and it took one reunion dinner and a pencil to hold the wheel steady.',
+      go:'n_h9' },
+    { t:'Say nothing. Some corrections you accept the way ground accepts rain.',
+      go:'n_h9' },
+  ]},
+
+n_h9:{ region:'station', reg:'dread', title:'Three Tickets',
+  text:(S,P)=>`They split at the station, because three foreign workers travelling together is a unit and units get counted. Two went north together for the Stettin boats — French draughtsmen, papers immaculate, a cover story with real Breslau dust on it. The third went his own long way alone, east then north, for Danzig — a margarine salesman, of all the blessed trades, with samples in his case and a Norwegian shrug rehearsed to perfection.\n\nTrains, checks, torches, timetables. All the machinery that ate seventy-three men out of my book — and in this one, love, watch: the papers hold. Every check. Every torch. The clerks stamp, the Feldgendarmerie nod, the trains run on the Reich’s own beautiful punctuality with the Reich’s own escaped prisoners aboard, reading the Reich’s own newspapers with expressions of profound boredom.\n\n${S.flags.htell==='bar'?'“The trick,” said the man in the bar, stirring his soda water, “is to be the least interesting object in any given railway carriage. I have never since managed to be interesting on a train. My wife despairs.”':'In my tellings I ride all three trains. I have had fifty years; there is time for every carriage.'}`,
+  choices:[
+    { t:'Ride north with the pair, in the telling — two men not knowing each other loudly, all the way to the Stettin docks.',
+      pre:'the pair', fx:(S,P)=>{S.flags.hroute='pair';}, go:'n_h10' },
+    { t:'Ride east alone with the margarine man — the long way round, the cold platforms, the shrug that answered every question in Norwegian silence.',
+      pre:'the third ticket', fx:(S,P)=>{S.flags.hroute='solo';}, go:'n_h10' },
+    { t:'Stay above the map, the navigator’s view: three moving lights crossing the Reich at night, converging on salt water.',
+      fx:(S,P)=>{S.flags.hroute='map';}, go:'n_h10' },
+    { t:'Give the checks their full weight — every torch a coin-flip that came up heads, eleven times, because the papers were grown right and the nerve held.',
+      go:'n_h10' },
+  ]},
+
+n_h10:{ region:'docks', reg:'elegy', title:'Everybody Catches the Boat',
+  text:(S,P)=>`${S.flags.hroute==='solo'?'The margarine man talked his way onto a Danzig freighter with a hold full of coal dust and a bosun full of expensive sympathy, and stood out into the Baltic on the fourth night.':'The pair went over the Stettin harbor fence at the blind corner the stokers sold, and swam the last black yards, and came up a Swedish anchor chain with their papers ruined and their lungs full of the Baltic and nothing else in the world wrong at all.'} And then — this is the part I make her sit still for — THE OTHERS ALSO MADE IT. All three. Separate boats, separate nights, one week. Stockholm confirmed them one by one like stars coming out.\n\nNo list. No urns. No week of names growing under an eagle. Three men out of a plywood horse, and every single one of them home for Christmas, and the Kommandant of East Compound reportedly stood looking at the innocent horse in its shed for a long time, and then — I have this on good authority — laughed. Once. Quietly. One professional to another.\n\nIn the club, the girl closes the notebook on the horse’s ledger: one hundred feet, all of it spent, nothing owing. “You weren’t there,” she says — gently, the way her grandfather used to catch a man out kindly. No, love. I was next door, burying Tom. “But you’ve been going with them ever since.” Every night I need it. That is what the clean one is FOR. The Fifty taught me what the digging costs. The horse reminds me what it was all along: possible.`,
+  choices:[
+    { t:'Raise the glass of the man not present to the three of them — the only toast in this club that never once needed the word “absent.”',
+      pre:'all three', fx:(S,P)=>{ award(P,'allthree'); }, end:'e_horse' },
+    { t:'Give her the notebook back and tell her the horse is hers now — the clean one, kept in trust, for the nights she’ll need it someday.',
+      pre:'kept in trust', fx:(S,P)=>{ award(P,'allthree'); }, end:'e_horse' },
+    { t:'Tell her what the man in the bar said last, at the door, in 1947: “We were lucky, of course. But we built the luck a bowlful at a time.”',
+      fx:(S,P)=>{ award(P,'allthree'); }, end:'e_horse' },
+    { t:'Sit a moment with the arithmetic that has no remainder: three out, three home, nought carried. The only sum of the war that ever balanced.',
+      fx:(S,P)=>{ award(P,'allthree'); }, end:'e_horse' },
+  ]},
+
 };
 
 /* ======================================================================
@@ -852,6 +1022,10 @@ e_roll:{ kind:'true', art:'club', title:'Answering the Roll',
   text:(S,P)=>`The club secretary reads the roll of the Sagan men at nine o’clock, as it has been read at this dinner every year since 1946. There was a time it took half an hour of answering. Tonight it is one long column of silence — and me.\n\nBut tonight is different, and she is why. Fifty years I have told this story in pieces — the funny parts at dinners, the ache to the ceiling, the dark versions to nobody. Tonight, for the first time, all of it is out on the white cloth in order: every man, every foot, every number, every weather. The Log is complete. And a man who has finally told all of it true discovers he can do the thing he could never do at this table before.\n\nThe secretary reads. And for each name — the barrister with the black bright eyes, ninth on the list; the forger, half-blind, taken at a station west; the Tunnel King, who was owed twice and paid in full in Warsaw in ’72; the big man with the allotment, her grandfather, marrows and all; the Doc; the navigator, forty-one years at that chair — for each name, the last man of Hut 104 stands at attention, seventy-four years old, glass of the absent raised, and answers.\n\n“Here.”\n\nFifty times, and then the crew, and then, at the last, quietly, for a Lancaster and five boys over Essen: “Here.”\n\nHer hand finds mine on the white cloth. “All present,” she says — she has his laugh, and, it turns out, his exactness — “All present. All accounted for.”\n\n<em>The last page follows. It has the real names on it.</em>`,
 },
 
+e_horse:{ kind:'home', art:'horse', title:'The Ones Who All Came Home',
+  text:(S,P)=>`That is the horse, told to the end, the way it went: no flinches${(P.endings&&P.endings.e_horse)?' — or fewer, anyway; she keeps the ledger on that too':''}, no list, no remainder. The neat, small, perfect one. History did it once, just once, right next door to the worst of it, in the same sand, under the same towers, the same autumn — as if to leave a proof in the margin: the problem was never impossible. It was only expensive.\n\nThe three of them wrote it all down after the war, and men of my book read it the way you read a letter from a better timeline. I met one of them, once, as I said, in 1947, and what I remember best is his hands around the soda water: steady as a bench vice. “The horse was the easy part,” he told me. “The hard part was believing, every day, for three months, that a thing that daft was allowed to work.” That is the sentence I have carried out of that bar for fifty years, love, and I hand it to you now with the notebook: the daft thing is allowed to work.\n\nAt the club, last orders called and ignored, she reads the horse’s pages back to me in order — the idea, the rota, the heel, the ditch, the three boats — and I sit with my eyes shut listening to my borrowed escape in her voice, and every man in it lives, every time, and the light passes, and they get up, and they walk.`,
+},
+
 e_pause:{ kind:'pause', art:'club', title:'The Telling Pauses',
   text:`In the club, the girl looks up from the tablecloth where she has been writing feet with her finger.\n\n“That’s not an ending,” she says, quite rightly.\n\nNo. That is where a man puts a bookmark. The rest of it wants a steadier glass than this one, and the club does not close till late.` },
 
@@ -874,6 +1048,7 @@ const her = {
   e_hook:`“Who else knows?” she asks. Nobody, now. “Then it’s mine,” she says, and folds her hands over it — and that is where it lives now, and it weighs less tonight than it did this morning.`,
   e_roll:`She stands when I stand. Every chair at that table that still has a man in it stands.`,
   e_pause:`“Next time,” she says, “no bookmark.”`,
+  e_horse:`“And you always catch the boat?” Every time, love. In this one, everybody always catches the boat. “Good,” she says, and writes it in the notebook under the ledger, in capitals, like a course confirmed: ALL THREE.`,
 };
 
 /* ---------------- helpers used by choices (engine binds award/logSee) -- */
@@ -927,6 +1102,7 @@ const afterword = `<h3>The Fifty</h3>
 <p>On Hitler’s personal order, <b>fifty of the recaptured officers were murdered by the Gestapo</b> — taken from prisons in small groups, driven to roadsides and fields, and shot, the files claiming escape attempts that never happened. Among them were Roger Bushell, shot near Saarbrücken, and Flight Lieutenant <b>Tim Walenn</b>, the gentle master forger of “Dean & Dawson,” who went half-blind making other men’s papers. The urns came back to Sagan by rail. The prisoners were permitted to build a memorial vault in the pines down the Sagan road. It stands there today, and it is tended.</p>
 <p><b>Three men reached home:</b> the Norwegians Per Bergsland and Jens Müller, by train to Stettin and ship to Sweden, and the Dutch pilot Bram van der Stok, the long way through France to Spain. Wally Floody, the Canadian mining engineer who built the tunnels, was purged to another compound weeks before the escape — the Tunnel King never went down Harry, and it saved his life. Kommandant Friedrich Wilhelm von Lindeiner-Wildau, who had run his camp like a soldier of the old school, was arrested and court-martialed for it. The chief ferret, Hermann Glemnitz, whose craftsmanship the prisoners genuinely respected, attended their reunions after the war, and was welcome.</p>
 <p>After the murders, the prisoners of North Compound began one more tunnel, under the theater. It went nowhere in particular. It was insurance, and defiance, and — as the camp doctors understood better than anyone — medicine. Its real name was <b>George</b>.</p>
+<p><b>Book Two is true as well.</b> In October 1943, months before the Great Escape, three officers of the East Compound — <b>Eric Williams, Michael Codner and Oliver Philpot</b> — escaped through a 100-foot tunnel dug from beneath a vaulting horse placed daily near the wire, the vaulting masking the work from the seismograph microphones. All three reached Sweden and home: Williams and Codner by ship from Stettin, Philpot — travelling as a Norwegian margarine salesman — via Danzig. No one was recaptured and no one died. Williams told the story in <em>The Wooden Horse</em> (1949). The narrator of this game was never among them; that borrowing is the fiction's own, and openly confessed.</p>
 <p>In January 1945 the camp was marched west through blizzard ahead of the Soviet advance — the Long March — and liberated in the spring.</p>
 <p><em>The characters in this game are inventions wearing the true events. The names in this story were changed. These were the real ones. If the game sent you here wanting more, the record is rich: the escapers themselves wrote it down, and the fifty names are read aloud at RAF stations to this day.</em></p>
 <p class="af-close"><em>This happened. The names belong to no one, so that the story can belong to all of them.</em></p>`;

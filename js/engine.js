@@ -215,9 +215,10 @@ function paintRail(){
 const NVLBL=['steady','quiet','fevered'];
 function tunnelSVG(){
   const w=300, gx=18, gw=w-2*gx;
-  const george = S.tun==='george';
-  const px = george ? clamp(gx+S.feet*1.6, gx, gx+gw) : gx+gw*(S.feet/GOAL);
-  let s=`<svg viewBox="0 0 ${w} 56" class="tun-svg" aria-label="the tunnel: ${S.feet}${george?' feet, no end mark':' of '+GOAL+' feet'}">`;
+  const george = S.tun==='george', horse = S.tun==='horse';
+  const goal = horse ? 100 : GOAL;
+  const px = george ? clamp(gx+S.feet*1.6, gx, gx+gw) : gx+gw*(S.feet/goal);
+  let s=`<svg viewBox="0 0 ${w} 56" class="tun-svg" aria-label="the tunnel: ${S.feet}${george?' feet, no end mark':' of '+goal+' feet'}">`;
   s+=`<line x1="6" y1="18" x2="${w-6}" y2="18" stroke="#6d675a" stroke-width="2"/>`;      /* surface */
   for(let x=gx;x<w-6;x+=17) s+=`<line x1="${x}" y1="14" x2="${x}" y2="18" stroke="#8a8266" stroke-width="1"/>`; /* wire posts stylized */
   s+=`<rect x="8" y="8" width="14" height="10" fill="#6d675a"/>`;                          /* hut 104 / the theater */
@@ -228,7 +229,7 @@ function tunnelSVG(){
     s+=`<line x1="${px}" y1="40" x2="${gx+gw}" y2="40" stroke="#c9c1a4" stroke-width="1.4" stroke-dasharray="3 4"/>`;
     s+=`<path d="M${w-16} 18 L${w-10} 6 L${w-4} 18 Z" fill="#3c4c38"/>`;                  /* the trees */
     s+=`<path d="M${w-26} 18 L${w-21} 9 L${w-16} 18 Z" fill="#3c4c38" opacity=".8"/>`;
-    s+=`<text x="${w-6}" y="52" text-anchor="end" font-size="9" font-family="Courier New,monospace" fill="#8a8266">of ${GOAL}</text>`;
+    s+=`<text x="${w-6}" y="52" text-anchor="end" font-size="9" font-family="Courier New,monospace" fill="#8a8266">of ${goal}${horse?' — from the horse':''}</text>`;
   } else {
     s+=`<text x="${w-6}" y="52" text-anchor="end" font-size="9" font-family="Courier New,monospace" fill="#8a8266">GEORGE — no end mark</text>`;
   }
@@ -294,6 +295,7 @@ function choose(c){
 function ending(id){
   const e=ENDINGS[id];
   if(!e){ console.error('missing ending',id); return titleScreen(); }
+  $('choices').innerHTML=''; /* stale buttons must not re-fire the ending (double-click guard) */
   P.runs++; P.endings[id]=(P.endings[id]||0)+1;
   P.lastTitle=fmt(e.title);
   P.journal=P.journal||[];
@@ -371,6 +373,7 @@ window.__ggSoak = function(n=200, seed=1944){
   for(let run=0;run<n;run++){
     const sS=newRun();
     const sP=defP(); /* throwaway — no __live, so no toasts, no saves */
+    if(run%2) sP.runs=1; /* half the walks are retellings, so Book Two gets soaked */
     let node=sS.node, steps=0, done=false;
     try{
       while(steps++<200){
