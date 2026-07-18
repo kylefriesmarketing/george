@@ -143,7 +143,14 @@ appell snare, THE SILENCE on region list. Console clean.*
       (needle's eye / the garden / a counterfactual) DOM-verified; save/reload at every act
       boundary round-trips.
 
-## M4 — ART PASS (budget-gated — check `transactions` FIRST)
+## M4 — ART PASS — ✅ DONE 2026-07-18
+*16 scenes + og for ~32cr (nano_banana_2 @2cr, balance 196.9→~165). Montage-vetted in one Read —
+palette law held (yellow=sand only, amber=home only, no insignia). Installed as JPG q86 in
+assets/scenes/; images.js + image-first paintScene with SVG fallback. 9 lower-traffic regions
+(silk/dulag/scheme/cooler/appell/station/walk + shared) stay procedural on purpose — candidates
+for a future top-up. No portraits this pass (same).*
+
+## M4 original checklist (kept for reference)
 
 - [ ] SVG fallbacks confirmed shipping for every scene/ending (they exist from M1–M3; art
       only upgrades).
@@ -159,7 +166,16 @@ appell snare, THE SILENCE on region list. Console clean.*
 - [ ] **GATE:** montage-vet every image before install (one Read of the montage, never
       per-image); all art has onerror SVG fallback; page weight sane.
 
-## M5 — AUDIO + POLISH + DEPLOY
+## M5 — AUDIO + POLISH + DEPLOY — ✅ DONE 2026-07-18 · **SHIPPED & LIVE**
+*Live: https://kylefriesmarketing.github.io/george/ (repo kylefriesmarketing/george, Pages main).
+Audio: register pads + George's theme + appell snare + THE SILENCE (region 'list' stops all
+music; memorial got its own 'vault' region so music returns at the dedication). THE ROOM: shelf
+book (row 1), hub card, kid-greeting + notebook progress (gg_persist, 12 tellings), sitemap —
+games repo 74bd534. SHIP GATE GREEN: 1000-run soak on the DEPLOYED build, 0 problems, 9 endings
+hit live, art loading, console clean. Remaining nice-to-haves: name-your-telling UI, portraits,
+mobile deep-pass (works, untuned).*
+
+## M5 original checklist (kept for reference)
 
 - [ ] Leitmotifs (WebAudio synth, all original): George's theme (4-bar whistle, learned in
       the Act I crash, recurs), tunnel (earth drone + breath + trolley rope-creak), home
