@@ -13,10 +13,13 @@ const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
 
 /* ---------------- persistence: the retellings ---------------- */
 function defP(){ return { runs:0, endings:{}, log:{}, mentions:{}, frame:null,
-  names:{ hero:'Kit', friend:'Freddie' }, lastTitle:null, journal:[] }; }
+  names:{ hero:'Kit', friend:'Freddie' }, lastTitle:null, journal:[],
+  opts:{ size:'normal', reveal:'unfurl', contrast:0, cold:0 } }; }
 function loadP(){ try{ const p=JSON.parse(localStorage.getItem(K_P));
   if(p){ const d=defP(); const m=Object.assign(d,p);
-    m.names=Object.assign({hero:'Kit',friend:'Freddie'}, p.names||{}); return m; } }catch(e){}
+    m.names=Object.assign({hero:'Kit',friend:'Freddie'}, p.names||{});
+    m.opts=Object.assign({size:'normal',reveal:'unfurl',contrast:0,cold:0}, p.opts||{});
+    return m; } }catch(e){}
   return defP(); }
 let P=loadP();
 Object.defineProperty(P,'__live',{value:true,enumerable:false,configurable:true});
@@ -46,6 +49,58 @@ function fmt(t){ let s=String(typeof t==='function'?t(S,P):t);
 
 function show(id){ ['title-screen','game-screen','ending-screen','gallery']
   .forEach(s=>$(s).classList.toggle('hidden', s!==id)); }
+
+/* ---------------- options (B): size, reveal, contrast, cold ----------- */
+function applyOpts(){
+  document.body.classList.toggle('text-lg', P.opts.size==='large');
+  document.body.classList.toggle('contrast', !!P.opts.contrast);
+  document.body.classList.toggle('cold-hud', !!P.opts.cold);
+  if(S && !P.opts.cold) {} /* turning cold ON mid-run doesn't grant; OFF revokes: */
+  if(S && !P.opts.cold && S.flags) S.flags.coldRun=0;
+}
+function optionsPanel(){
+  const o=P.opts;
+  $('gallery-title').textContent='Options';
+  $('gallery-body').innerHTML=`<div class="gallery-sub">Set the table to your liking. The telling is the telling either way.</div>
+    <div class="opt-row"><span class="opt-name">text size</span>
+      ${['normal','large'].map(v=>`<button class="opt-btn ${o.size===v?'on':''}" data-k="size" data-v="${v}">${v}</button>`).join('')}</div>
+    <div class="opt-row"><span class="opt-name">the prose arrives</span>
+      ${['instant','unfurl','type'].map(v=>`<button class="opt-btn ${o.reveal===v?'on':''}" data-k="reveal" data-v="${v}">${v==='type'?'typewriter':v}</button>`).join('')}</div>
+    <div class="opt-row"><span class="opt-name">high contrast</span>
+      ${['0','1'].map(v=>`<button class="opt-btn ${String(o.contrast)===v?'on':''}" data-k="contrast" data-v="${v}">${v==='1'?'on':'off'}</button>`).join('')}</div>
+    <div class="opt-row"><span class="opt-name">cold telling</span>
+      ${['0','1'].map(v=>`<button class="opt-btn ${String(o.cold)===v?'on':''}" data-k="cold" data-v="${v}">${v==='1'?'ledger hidden':'ledger shown'}</button>`).join('')}
+      <div class="opt-note">He never saw the meters either. Tell Book One cold, start to finish, and it is Mentioned.</div></div>`;
+  $('gallery-body').querySelectorAll('.opt-btn').forEach(b=>{
+    b.onclick=()=>{ const k=b.dataset.k, v=b.dataset.v;
+      P.opts[k]=(k==='contrast'||k==='cold')?+v:v; saveP(); applyOpts(); optionsPanel(); };
+  });
+  show('gallery');
+}
+
+/* ---------------- typewriter (B): HTML-safe, click completes ---------- */
+let typeTimer=null, typeDone=null;
+function typeInto(el, html){
+  if(typeTimer){ clearInterval(typeTimer); typeTimer=null; if(typeDone) typeDone(); }
+  const tokens=[]; let i=0;
+  while(i<html.length){
+    if(html[i]==='<'){ const j=html.indexOf('>',i); tokens.push(html.slice(i,j+1)); i=j+1; }
+    else { tokens.push(html[i]); i++; }
+  }
+  let pos=0, out='';
+  el.innerHTML='';
+  typeDone=()=>{ el.innerHTML=html; if(typeTimer){clearInterval(typeTimer); typeTimer=null;} typeDone=null; };
+  typeTimer=setInterval(()=>{
+    let burst=3;
+    while(burst-- && pos<tokens.length){ out+=tokens[pos++];
+      while(pos<tokens.length && tokens[pos][0]==='<'){ out+=tokens[pos++]; } }
+    el.innerHTML=out;
+    if(pos>=tokens.length){ clearInterval(typeTimer); typeTimer=null; typeDone=null; }
+  },16);
+}
+document.addEventListener('click',e=>{
+  if(typeTimer && e.target.closest('#text-panel')) { if(typeDone) typeDone(); }
+});
 
 function toast(msg){ const t=document.createElement('div'); t.className='gg-toast';
   t.textContent=msg; document.body.appendChild(t);
@@ -86,6 +141,8 @@ function juice(reg){
     st.textContent=STORY.CHAPTERS[reg.ch-1].toUpperCase();
     st.classList.remove('show'); void st.offsetWidth; st.classList.add('show');
     AUDIO.stamp();
+    const pt=$('page-turn');
+    if(pt){ pt.classList.remove('go'); void pt.offsetWidth; pt.classList.add('go'); }
   }
 }
 
@@ -125,7 +182,9 @@ function readNames(){
   P.names.hero=(h||'Kit').slice(0,18); P.names.friend=(f||'Freddie').slice(0,18); saveP();
 }
 $('btn-begin').onclick=()=>{ readNames(); S=newRun(); lastCh=0; pendingDeltas=[];
+  S.flags.coldRun = P.opts.cold?1:0;
   show('game-screen'); render(S.node); };
+$('btn-options').onclick=optionsPanel;
 $('btn-continue').onclick=()=>{ const r=loadRun(); if(!r) return titleScreen();
   readNames(); S=r; lastCh=REGIONS[NODES[r.node].region].ch; pendingDeltas=[];
   show('game-screen'); render(S.node); };
@@ -269,7 +328,14 @@ function render(nodeId){
   paintRail(); paintHUD(); juice(reg);
   $('region-name').textContent=reg.name;
   $('node-title').textContent=fmt(n.title);
-  $('node-text').innerHTML=fmt(n.text).split('\n\n').map((p,i)=>`<p class="unfurl" style="animation-delay:${Math.min(i*170,900)}ms">${p}</p>`).join('');
+  const paras=fmt(n.text).split('\n\n');
+  if(P.opts.reveal==='type'){
+    typeInto($('node-text'), paras.map(p=>`<p>${p}</p>`).join(''));
+  } else if(P.opts.reveal==='instant'){
+    $('node-text').innerHTML=paras.map(p=>`<p>${p}</p>`).join('');
+  } else {
+    $('node-text').innerHTML=paras.map((p,i)=>`<p class="unfurl" style="animation-delay:${Math.min(i*170,900)}ms">${p}</p>`).join('');
+  }
   const box=$('choices'); box.innerHTML='';
   n.choices.forEach(c=>{
     if(c.req && !c.req(S,P)) return;
@@ -303,6 +369,9 @@ function ending(id){
   P.journal=P.journal||[];
   P.journal.push({ e:id, n:P.runs, t:fmt(e.title) });
   if(P.journal.length>60) P.journal.shift();
+  if(S && S.flags.coldRun && P.opts.cold && !['e_horse','e_relay','e_pause','e_roll'].includes(id))
+    award(P,'cold');
+  lastEnd={ id, art:e.art, title:fmt(e.title), kind:e.kind, n:P.runs+0 };
   saveP(); clearRun();
   AUDIO.setScene('ending','elegy',9);
   AUDIO.sting(e.kind);
@@ -314,9 +383,46 @@ function ending(id){
   $('ending-text').innerHTML=fmt(e.text).split('\n\n').map(p=>`<p>${p}</p>`).join('');
   $('ending-meta').textContent = S && S.flags.tunnelRevealed ? `${S.feet} feet on the ledger` : '';
   $('ending-her').innerHTML = STORY.her[id] ? fmt(STORY.her[id]) : '';
+  $('ending-caption').textContent = `Telling № ${P.runs} — pasted into her notebook`;
   $('btn-lastpage').classList.toggle('urgent', id==='e_roll');
   show('ending-screen');
 }
+let lastEnd=null;
+
+/* ---------------- share cards (D): Keep This Page ---------------- */
+$('btn-keep').onclick=()=>{
+  if(!lastEnd) return;
+  const cv=document.createElement('canvas'); cv.width=1200; cv.height=630;
+  const c=cv.getContext('2d');
+  const finish=()=>{
+    /* airmail border */
+    for(let i=0,x=0;x<1200;i++,x+=44){ c.fillStyle=i%2?'#33507a':'#8c2f24'; c.fillRect(x,0,30,10); c.fillRect(1200-x-30,620,30,10); }
+    c.fillStyle='#efe6cf'; c.fillRect(0,400,1200,220);
+    c.fillStyle='#8a8266'; c.font='16px Courier New'; c.textAlign='left';
+    c.fillText('G FOR GEORGE — THE TUNNELS OF STALAG LUFT III', 48, 448);
+    c.fillStyle='#2c2a22'; c.font='bold 52px Courier New';
+    c.fillText(lastEnd.title, 44, 510);
+    c.fillStyle='#5a5340'; c.font='italic 22px Georgia';
+    c.fillText(`Telling № ${lastEnd.n} · ${lastEnd.kind==='pause'?'a bookmark':lastEnd.kind} · one of 14 tellings`, 48, 552);
+    c.fillStyle='#8a8266'; c.font='16px Courier New';
+    c.fillText('kylefriesmarketing.github.io/george — part of THE SHELF', 48, 592);
+    const a=document.createElement('a');
+    a.download=`george-telling-${lastEnd.n}.png`;
+    a.href=cv.toDataURL('image/png');
+    document.body.appendChild(a); a.click(); a.remove();
+    toast('THE PAGE IS KEPT — saved to your downloads');
+  };
+  c.fillStyle='#efe6cf'; c.fillRect(0,0,1200,630);
+  if(typeof IMAGES!=='undefined' && IMAGES.has(lastEnd.art)){
+    const img=new Image();
+    img.onload=()=>{ const iw=img.width, ih=img.height, s=Math.max(1200/iw, 400/ih);
+      c.drawImage(img,(1200-iw*s)/2,(400-ih*s)/2,iw*s,ih*s);
+      const gr=c.createLinearGradient(0,260,0,400); gr.addColorStop(0,'rgba(20,16,10,0)'); gr.addColorStop(1,'rgba(20,16,10,.45)');
+      c.fillStyle=gr; c.fillRect(0,260,1200,140); finish(); };
+    img.onerror=finish;
+    img.src=IMAGES.url(lastEnd.art);
+  } else finish();
+};
 $('btn-again').onclick=titleScreen;
 $('btn-lastpage').onclick=()=>{
   $('gallery-title').textContent='The Last Page';
@@ -400,5 +506,6 @@ window.__ggSoak = function(n=200, seed=1944){
   return out;
 };
 
+applyOpts();
 titleScreen();
 })();

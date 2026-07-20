@@ -93,6 +93,7 @@ const mentions = {
   vaulter:  { t:'Twenty a Day',              hint:'Take every vaulting shift in Book Two.' },
   flush:    { t:'Flush to the Frame',        hint:'Reseal the trap so well the horse itself would approve.' },
   allthree: { t:'All Three',                 hint:'Catch the boat. Everyone catches the boat.' },
+  cold:     { t:'The Unwatched Ledger',      hint:'Tell Book One start to finish with the ledger hidden. He never saw the meters either.' },
   thedoor:  { t:'The Door Not Knocked',      hint:'Walk past your own street in Book Three, and keep walking.' },
   handtohand:{ t:'Hand to Hand',             hint:'Guard every link of the chain the careful way.' },
   ledger:   { t:'The Ledger of Hands',       hint:'Finish the third telling — all of it, fates included.' },

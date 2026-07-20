@@ -247,6 +247,23 @@ HUD). Unlocks after Book Two is told.
 - [ ] **GATE:** soak (seeded with e_horse) green, e_relay + deeds reachable, chain chip
       renders, live deploy.
 
+## M9 — THE FINISH (A+B+C+D) — ✅ DONE 2026-07-18
+
+- [x] **A · Audio v2** (audio.js rewritten): music-box lullaby phrase detuning by chapter;
+      camp wind / tunnel earth+creaks / club room-tone / harbor rumble layers; Book Two
+      music-hall lilt on horse regions; THE RELAY theme (four voices, each starting where
+      the last let go, the small silence of the handover between); richer per-kind stings;
+      THE SILENCE untouched. 0cr. *Code paths exercised headless; give it ears in a real tab.*
+- [x] **B · Options & Cold Telling**: 4-row options panel (persisted in P.opts), HTML-safe
+      typewriter with click-to-complete, text-lg/contrast/cold classes; cold deed "The
+      Unwatched Ledger" verified on a full cold Book One run — registry 31.
+- [x] **C · Presentation**: Ken Burns on scenes (reduced-motion safe), page-turn sweep on
+      chapter stamps, ending art as a rotated white-framed photograph with a notebook caption.
+- [x] **D · Share cards**: Keep This Page — 1200×630 canvas card (scene art + airmail border
+      + telling title/number/kind + url), local download, "THE PAGE IS KEPT" toast.
+- [x] **GATE:** soak 1500 green; typewriter types + completes; HUD hidden cold; cold deed
+      awarded on The Other Uniform; caption + card + toast verified; console clean; deployed.
+
 ---
 
 **Order of battle if a session is short:** M0+M1 are one sitting (the slice proves the voice).
