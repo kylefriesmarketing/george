@@ -14,13 +14,46 @@ const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
 /* ---------------- persistence: the retellings ---------------- */
 function defP(){ return { runs:0, endings:{}, log:{}, mentions:{}, frame:null,
   names:{ hero:'Kit', friend:'Freddie' }, lastTitle:null, journal:[],
-  opts:{ size:'normal', reveal:'unfurl', contrast:0, cold:0 } }; }
+  opts:{ size:'normal', reveal:'unfurl', contrast:0, cold:0, nums:0 } }; }
 function loadP(){ try{ const p=JSON.parse(localStorage.getItem(K_P));
   if(p){ const d=defP(); const m=Object.assign(d,p);
     m.names=Object.assign({hero:'Kit',friend:'Freddie'}, p.names||{});
-    m.opts=Object.assign({size:'normal',reveal:'unfurl',contrast:0,cold:0}, p.opts||{});
+    m.opts=Object.assign({size:'normal',reveal:'unfurl',contrast:0,cold:0,nums:0}, p.opts||{});
     return m; } }catch(e){}
-  return defP(); }
+  const fresh=defP();
+  /* first-ever load: default high contrast to the OS preference (M11-D) */
+  try{ if(window.matchMedia && window.matchMedia('(prefers-contrast: more)').matches) fresh.opts.contrast=1; }catch(e){}
+  return fresh; }
+
+/* ---------------- notebook export / import (M11-A) ---------------- */
+/* the whole notebook, as a paste-able code — the shelf's share pattern.
+   import MERGES (never loses local progress): best of both, by design. */
+function exportCode(){
+  const slim={ runs:P.runs, endings:P.endings, log:P.log, mentions:P.mentions,
+    names:P.names, lastTitle:P.lastTitle, journal:P.journal };
+  return 'GG1.'+btoa(unescape(encodeURIComponent(JSON.stringify(slim))));
+}
+function importCode(str){
+  str=(str||'').trim();
+  if(!str.startsWith('GG1.')) return { ok:false, msg:'That is not a notebook code (it should start with GG1.).' };
+  let d; try{ d=JSON.parse(decodeURIComponent(escape(atob(str.slice(4))))); }
+  catch(e){ return { ok:false, msg:'That code is damaged — check it copied whole.' }; }
+  if(!d || typeof d!=='object') return { ok:false, msg:'That code is empty.' };
+  const before={ e:Object.keys(P.endings).length, m:Object.keys(P.mentions).length };
+  /* union-max merge: counts add up to the larger, log takes the deeper stage */
+  const maxMerge=(a,b)=>{ const o=Object.assign({},a||{});
+    for(const k in (b||{})) o[k]=Math.max(o[k]||0, b[k]||0); return o; };
+  P.endings=maxMerge(P.endings, d.endings);
+  P.mentions=maxMerge(P.mentions, d.mentions);
+  P.log=maxMerge(P.log, d.log);
+  P.runs=Math.max(P.runs||0, d.runs||0);
+  if(d.lastTitle && !P.lastTitle) P.lastTitle=d.lastTitle;
+  if(Array.isArray(d.journal) && d.journal.length>(P.journal||[]).length) P.journal=d.journal.slice(-60);
+  if(d.names && (!P.runs || !P.names)) P.names=Object.assign(P.names||{}, d.names);
+  saveP();
+  const gained={ e:Object.keys(P.endings).length-before.e, m:Object.keys(P.mentions).length-before.m };
+  return { ok:true, msg:`Notebook merged. ${gained.e>0?'+'+gained.e+' telling'+(gained.e>1?'s':''):'no new tellings'}, ${gained.m>0?'+'+gained.m+' mention'+(gained.m>1?'s':''):'no new mentions'}.` };
+}
 let P=loadP();
 Object.defineProperty(P,'__live',{value:true,enumerable:false,configurable:true});
 function saveP(){ localStorage.setItem(K_P, JSON.stringify(P)); }
@@ -72,13 +105,33 @@ function optionsPanel(){
       ${['instant','unfurl','type'].map(v=>`<button class="opt-btn ${o.reveal===v?'on':''}" data-k="reveal" data-v="${v}">${v==='type'?'typewriter':v}</button>`).join('')}</div>
     <div class="opt-row"><span class="opt-name">high contrast</span>
       ${['0','1'].map(v=>`<button class="opt-btn ${String(o.contrast)===v?'on':''}" data-k="contrast" data-v="${v}">${v==='1'?'on':'off'}</button>`).join('')}</div>
+    <div class="opt-row"><span class="opt-name">choice numbers</span>
+      ${['0','1'].map(v=>`<button class="opt-btn ${String(o.nums)===v?'on':''}" data-k="nums" data-v="${v}">${v==='1'?'shown':'hidden'}</button>`).join('')}
+      <div class="opt-note">Press 1–9 to choose. Turn this on to see the numbers on each choice.</div></div>
     <div class="opt-row"><span class="opt-name">cold telling</span>
       ${['0','1'].map(v=>`<button class="opt-btn ${String(o.cold)===v?'on':''}" data-k="cold" data-v="${v}">${v==='1'?'ledger hidden':'ledger shown'}</button>`).join('')}
-      <div class="opt-note">He never saw the meters either. Tell Book One cold, start to finish, and it is Mentioned.</div></div>`;
-  $('gallery-body').querySelectorAll('.opt-btn').forEach(b=>{
+      <div class="opt-note">He never saw the meters either. Tell Book One cold, start to finish, and it is Mentioned.</div></div>
+    <div class="opt-row col"><span class="opt-name">the notebook keeps</span>
+      <div class="opt-note">Your tellings, the Log, the Mentions — they live in this browser. Keep a code somewhere safe, or carry it to another device. Restoring only ever <em>adds</em>; it never loses what you have here.</div>
+      <div class="nb-actions">
+        <button id="nb-export" class="opt-btn wide">Copy my notebook code</button>
+        <textarea id="nb-code" class="nb-code" readonly rows="2" placeholder="your code appears here" aria-label="Your notebook code"></textarea>
+      </div>
+      <div class="nb-actions">
+        <input id="nb-in" class="nb-in" placeholder="paste a notebook code to restore" aria-label="Paste a notebook code">
+        <button id="nb-import" class="opt-btn">Restore</button>
+      </div>
+      <div id="nb-msg" class="opt-note" aria-live="polite"></div></div>`;
+  $('gallery-body').querySelectorAll('.opt-btn[data-k]').forEach(b=>{
     b.onclick=()=>{ const k=b.dataset.k, v=b.dataset.v;
-      P.opts[k]=(k==='contrast'||k==='cold')?+v:v; saveP(); applyOpts(); optionsPanel(); };
+      P.opts[k]=(k==='contrast'||k==='cold'||k==='nums')?+v:v; saveP(); applyOpts(); optionsPanel(); };
   });
+  const ex=$('nb-export'); if(ex) ex.onclick=()=>{ const t=$('nb-code'); t.value=exportCode();
+    t.focus(); t.select(); try{ document.execCommand('copy'); }catch(e){}
+    try{ if(navigator.clipboard) navigator.clipboard.writeText(t.value); }catch(e){}
+    $('nb-msg').textContent='Copied. Keep it somewhere the war can’t reach.'; };
+  const im=$('nb-import'); if(im) im.onclick=()=>{ const r=importCode($('nb-in').value);
+    $('nb-msg').textContent=r.msg; if(r.ok){ $('nb-in').value=''; } };
   show('gallery');
 }
 
@@ -369,7 +422,8 @@ function render(nodeId){
     const b=document.createElement('button'); b.className='choice';
     idx++;
     b.setAttribute('aria-label', `Choice ${idx}: ${fmt(c.t).replace(/<[^>]+>/g,'')}`);
-    b.innerHTML=(c.pre?`<span class="c-pre">${c.pre}</span>`:'')+fmt(c.t);
+    const num = (P.opts.nums && idx<=9) ? `<span class="c-num">${idx}</span>` : '';
+    b.innerHTML=num+(c.pre?`<span class="c-pre">${c.pre}</span>`:'')+fmt(c.t);
     b.onclick=()=>choose(c);
     box.appendChild(b);
   });

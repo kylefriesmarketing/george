@@ -250,6 +250,32 @@ kbd{ font-family:'Courier New',monospace; background:#00000018; padding:0 4px; b
   #title-art{ margin:18px 14px 0; height:210px; }
   .ending-inner{ padding:18px 22px; }
 }
+/* ------- M11: focus-visible ring (keyboard nav made visible) ------- */
+a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visible,
+select:focus-visible, [tabindex]:focus-visible{
+  outline:2.5px solid #8c2f24; outline-offset:2px; border-radius:1px;
+}
+.choice:focus-visible{ outline-offset:-2px; background:#8c2f2412; }
+#node-title:focus-visible{ outline:none; } /* the passage receives focus silently */
+body.contrast a:focus-visible, body.contrast button:focus-visible,
+body.contrast .choice:focus-visible{ outline-color:#701f16; outline-width:3px; }
+
+/* ------- M11: choice numbers (opt-in) ------- */
+.c-num{ display:inline-block; min-width:1.4em; margin-right:8px; font-family:'Courier New',monospace;
+  font-size:12px; font-weight:bold; color:#8a8266; border:1px solid #b3ab8f; border-radius:3px;
+  text-align:center; padding:0 3px; vertical-align:1px; }
+.choice:hover .c-num, .choice:focus-visible .c-num{ color:#8c2f24; border-color:#8c2f24; }
+
+/* ------- M11: the notebook keeps (export/import) ------- */
+.opt-row.col{ flex-direction:column; align-items:stretch; }
+.nb-actions{ display:flex; gap:8px; margin-top:8px; flex-wrap:wrap; align-items:flex-start; }
+.opt-btn.wide{ white-space:nowrap; }
+.nb-code{ flex:1; min-width:180px; font-family:'Courier New',monospace; font-size:11px;
+  background:#f7f0dd; border:1px solid #b3ab8f; color:#5a5340; padding:5px 8px; resize:vertical;
+  word-break:break-all; }
+.nb-in{ flex:1; min-width:180px; font-family:'Courier New',monospace; font-size:12px;
+  background:#f7f0dd; border:1px solid #b3ab8f; color:#2c2a22; padding:6px 9px; }
+
 /* ------- M10: completion strip + Keeper ------- */
 .title-completion{ margin:12px auto 0; max-width:520px; }
 .comp-pillars{ display:flex; gap:10px; justify-content:center; margin-bottom:6px; }

@@ -278,6 +278,24 @@ HUD). Unlocks after Book Two is told.
       passage); gallery opens focus the close button + Escape closes from anywhere + overlay
       owns keys while open; per-choice aria-labels ("Choice N: …").
 - [x] **GATE:** soak 2500 green; live end-to-end Keeper telling (choice first & gated, node,
-      ending, deed, completion note, Tellings entry); gallery focus+Esc; console clean. 0cr. M0+M1 are one sitting (the slice proves the voice).
+      ending, deed, completion note, Tellings entry); gallery focus+Esc; console clean. 0cr.
+
+## M11 — THE NOTEBOOK KEEPS (quality-of-life + a11y, 0cr) — ✅ DONE 2026-07-20
+
+- [x] **Notebook export/import** (shelf share-code pattern): `GG1.`+base64 of runs/endings/log/
+      mentions/names/journal; import MERGES union-max (counts→larger, log→deeper stage, runs→max,
+      longer journal kept) so restoring never loses local progress. Proven two-device: exactly
+      5 endings / 4 mentions / tiny log 1→3 / runs→9. Options → "the notebook keeps".
+- [x] **Focus-visible ring**: keyboard nav visibly outlined across links/buttons/inputs/choices
+      (contrast variant thickens it); passage focus stays silent.
+- [x] **Choice numbers** (opt-in): 1–9 badges on choices; the number keys always worked, now
+      discoverable. Render + key-fire verified.
+- [x] **OS high-contrast auto-default**: first-ever load seeds opts.contrast from
+      `prefers-contrast: more`.
+- [x] **GATE:** soak green, merge lossless + accurate message, numbers render + keys fire,
+      focus-visible rule live, console clean, deploy.
+
+---
+M0+M1 are one sitting (the slice proves the voice).
 M2 is the long march — the economy first, then beats in calendar order. M3 before ANY art.
 M4/M5 can swap if credits are thin (audio is free, art isn't).
