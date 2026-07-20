@@ -295,6 +295,22 @@ HUD). Unlocks after Book Two is told.
 - [x] **GATE:** soak green, merge lossless + accurate message, numbers render + keys fire,
       focus-visible rule live, console clean, deploy.
 
+## M12 — HARDEN & RESPECT (engineering rigor, 0cr) — ✅ DONE 2026-07-20
+
+- [x] **Reduced-motion, comprehensively**: replaced two partial blocks with the recommended
+      global neutralizer + explicit `animation:none` kills for the infinite offenders (Ken Burns,
+      page-turn, the Keeper's urge pulse); the clock-rail SMIL ripple is now skipped in JS when
+      `reducedMotion()`. First load also auto-defaults reveal→'instant' under prefers-reduced-motion.
+- [x] **Save robustness**: `loadRun()` now validates (object + existing node) and discards/clears
+      corrupt or stale saves instead of white-screening; Continue merges the save over a fresh
+      skeleton so a pre-M8 save missing S.nv/chain/flags can't crash the HUD. Proven: garbage/
+      empty/bad-node all → null+cleared; an old-style {node,feet} save resumed and painted the
+      HUD (S.nv filled) with no error.
+- [x] **Richer README**: three-books structure, playing/accessibility/under-the-hood, real-names
+      note — the repo's front door.
+- [x] **GATE:** soak green; robustness matrix + real old-save resume verified; SMIL suppressed
+      under forced reduced-motion; console clean; deploy.
+
 ---
 M0+M1 are one sitting (the slice proves the voice).
 M2 is the long march — the economy first, then beats in calendar order. M3 before ANY art.

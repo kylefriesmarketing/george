@@ -21,9 +21,14 @@ function loadP(){ try{ const p=JSON.parse(localStorage.getItem(K_P));
     m.opts=Object.assign({size:'normal',reveal:'unfurl',contrast:0,cold:0,nums:0}, p.opts||{});
     return m; } }catch(e){}
   const fresh=defP();
-  /* first-ever load: default high contrast to the OS preference (M11-D) */
-  try{ if(window.matchMedia && window.matchMedia('(prefers-contrast: more)').matches) fresh.opts.contrast=1; }catch(e){}
+  /* first-ever load: seed options from the OS accessibility preferences */
+  try{ if(window.matchMedia){
+    if(window.matchMedia('(prefers-contrast: more)').matches) fresh.opts.contrast=1;
+    if(window.matchMedia('(prefers-reduced-motion: reduce)').matches) fresh.opts.reveal='instant';
+  } }catch(e){}
   return fresh; }
+const reducedMotion=()=>{ try{ return window.matchMedia &&
+  window.matchMedia('(prefers-reduced-motion: reduce)').matches; }catch(e){ return false; } };
 
 /* ---------------- notebook export / import (M11-A) ---------------- */
 /* the whole notebook, as a paste-able code — the shelf's share pattern.
@@ -74,7 +79,16 @@ function newRun(){ return { node:STORY.START, feet:0, heat:0, kit:0, crew:3,
 let S=null;
 function saveRun(){ if(S) localStorage.setItem(K_R, JSON.stringify(S)); }
 function clearRun(){ localStorage.removeItem(K_R); }
-function loadRun(){ try{ return JSON.parse(localStorage.getItem(K_R)); }catch(e){ return null; } }
+function loadRun(){
+  let r; try{ r=JSON.parse(localStorage.getItem(K_R)); }catch(e){ return null; }
+  /* only a run whose node still exists is resumable; corrupt or stale saves
+     (old versions, hand-edited storage) are discarded, never white-screened */
+  if(!r || typeof r!=='object' || !r.node || !NODES[r.node]){
+    if(r!==null) try{ localStorage.removeItem(K_R); }catch(e){}
+    return null;
+  }
+  return r;
+}
 
 /* ---------------- text ---------------- */
 function fmt(t){ let s=String(typeof t==='function'?t(S,P):t);
@@ -265,7 +279,11 @@ $('btn-begin').onclick=()=>{ readNames(); S=newRun(); lastCh=0; pendingDeltas=[]
   show('game-screen'); render(S.node); };
 $('btn-options').onclick=optionsPanel;
 $('btn-continue').onclick=()=>{ const r=loadRun(); if(!r) return titleScreen();
-  readNames(); S=r; lastCh=REGIONS[NODES[r.node].region].ch; pendingDeltas=[];
+  readNames();
+  /* merge over a fresh skeleton so a save from an earlier version can't be
+     missing a field the HUD/render reads (S.nv, S.chain, S.flags, …) */
+  S=Object.assign(newRun(), r); S.flags=Object.assign({}, r.flags||{});
+  lastCh=REGIONS[NODES[S.node].region].ch; pendingDeltas=[];
   show('game-screen'); render(S.node); };
 
 /* ---------------- galleries ---------------- */
@@ -344,7 +362,7 @@ function paintRail(){
     const y=48+i*48, on=i+1===reg.ch, done=i+1<reg.ch && reg.ch!==9;
     s+=`<circle cx="21" cy="${y}" r="${on?6:4}" fill="${on?'#8c2f24':done?'#8a8266':'none'}" stroke="${on?'#8c2f24':'#b3ab8f'}" stroke-width="1.4"/>`;
     if(i<STORY.CHAPTERS.length-1) s+=`<line x1="21" y1="${y+8}" x2="21" y2="${y+40}" stroke="#c9c1a4" stroke-width="1.2"/>`;
-    if(on) s+=`<circle cx="21" cy="${y}" r="10" fill="none" stroke="#8c2f24" stroke-width="1" opacity=".4"><animate attributeName="r" values="8;12;8" dur="3s" repeatCount="indefinite"/></circle>`;
+    if(on) s+=`<circle cx="21" cy="${y}" r="10" fill="none" stroke="#8c2f24" stroke-width="1" opacity=".4">${reducedMotion()?'':'<animate attributeName="r" values="8;12;8" dur="3s" repeatCount="indefinite"/>'}</circle>`;
   });
   $('clock-rail').innerHTML=s+`</svg>`;
 }

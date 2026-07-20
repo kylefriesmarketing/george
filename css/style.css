@@ -323,11 +323,6 @@ body.cold-hud #hud{ display:none; }
 #ending-art{ border:10px solid #f7f2e4; box-shadow:0 4px 16px #0007; transform:rotate(-.4deg); }
 #ending-caption{ font-family:'Courier New',monospace; font-size:12px; letter-spacing:1.5px;
   color:#8a8266; margin:10px 0 0; font-style:italic; }
-@media (prefers-reduced-motion:reduce){
-  .scene-img,#scene-art svg,#title-art svg,#ending-art svg{ animation:none; }
-  #page-turn.go{ animation:none; }
-}
-
 @media (max-width:480px){
   .game-title{ letter-spacing:3px; }
   .title-inner{ padding:16px 16px 8px; }
@@ -340,6 +335,16 @@ body.cold-hud #hud{ display:none; }
   .gallery-box{ padding:18px 16px; }
   .log-face{ width:56px; height:56px; }
 }
+/* comprehensive reduced-motion: no continuous or attention-grabbing motion.
+   The recommended global neutralizer + explicit kills for the infinite ones
+   (the Ken Burns drift, the page-turn sweep, the Keeper's urge pulse). */
 @media (prefers-reduced-motion:reduce){
-  .unfurl,#day-stamp.show,.delta-float{ animation-duration:.01s !important; }
+  *, *::before, *::after{
+    animation-duration:.001ms !important;
+    animation-iteration-count:1 !important;
+    transition-duration:.001ms !important;
+    scroll-behavior:auto !important;
+  }
+  .scene-img,#scene-art svg,#title-art svg,#ending-art svg,
+  #page-turn.go,#btn-lastpage.urgent{ animation:none !important; }
 }
