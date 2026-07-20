@@ -48,7 +48,11 @@ function fmt(t){ let s=String(typeof t==='function'?t(S,P):t);
   return s.replace(/\{HERO\}/g,P.names.hero).replace(/\{FRIEND\}/g,P.names.friend); }
 
 function show(id){ ['title-screen','game-screen','ending-screen','gallery']
-  .forEach(s=>$(s).classList.toggle('hidden', s!==id)); }
+  .forEach(s=>$(s).classList.toggle('hidden', s!==id));
+  /* a11y: when the gallery overlay opens, move focus into it so keyboard
+     and screen-reader users are placed on the panel, not left behind it */
+  if(id==='gallery'){ const c=$('gallery-close'); if(c) setTimeout(()=>c.focus(),0); }
+}
 
 /* ---------------- options (B): size, reveal, contrast, cold ----------- */
 function applyOpts(){
@@ -176,6 +180,28 @@ function titleScreen(){
     ? `You have told it ${P.runs===1?'once':P.runs+' times'} now. It comes out different every time. That is not lying — that is the only way to tell all of it.`
       + (P.lastTitle?`<br>Last time it came out as <em>“${P.lastTitle}.”</em>`:'')
     : '';
+  paintCompletion();
+}
+
+/* the three pillars → the Keeper. shows the completionist their path. */
+function paintCompletion(){
+  const el=$('title-completion'); if(!el) return;
+  const e=P.endings||{};
+  const bookOne = Object.keys(e).some(k=>!['e_horse','e_relay','e_keeper','e_pause'].includes(k));
+  const pillars=[
+    { on: bookOne,       lbl:'Book One — the tunnels' },
+    { on: !!e.e_horse,   lbl:'Book Two — the horse' },
+    { on: !!e.e_relay,   lbl:'Book Three — the relay' },
+    { on: !!e.e_roll,    lbl:'the roll answered' },
+  ];
+  const done=pillars.every(p=>p.on), keeper=!!e.e_keeper;
+  if(!P.runs){ el.innerHTML=''; return; }
+  el.innerHTML=`<div class="comp-pillars" role="img" aria-label="Progress: ${pillars.filter(p=>p.on).length} of 4 toward the Keeper${keeper?', the Keeper told':''}">`
+    + pillars.map(p=>`<span class="comp-dot ${p.on?'on':''}" title="${p.lbl}"></span>`).join('')
+    + `</span></div>`
+    + (keeper?`<div class="comp-note keeper">✦ The Keeper — the last page is read. The light does not go out.</div>`
+       : done?`<div class="comp-note ready">All three books told, the roll answered. Sit down one more time; she has a last page for you.</div>`
+       : `<div class="comp-note">${pillars.filter(p=>p.on).length} of four, on the way to the last page.</div>`);
 }
 function readNames(){
   const h=$('name-hero').value.trim(), f=$('name-friend').value.trim();
@@ -337,14 +363,20 @@ function render(nodeId){
     $('node-text').innerHTML=paras.map((p,i)=>`<p class="unfurl" style="animation-delay:${Math.min(i*170,900)}ms">${p}</p>`).join('');
   }
   const box=$('choices'); box.innerHTML='';
+  let idx=0;
   n.choices.forEach(c=>{
     if(c.req && !c.req(S,P)) return;
     const b=document.createElement('button'); b.className='choice';
+    idx++;
+    b.setAttribute('aria-label', `Choice ${idx}: ${fmt(c.t).replace(/<[^>]+>/g,'')}`);
     b.innerHTML=(c.pre?`<span class="c-pre">${c.pre}</span>`:'')+fmt(c.t);
     b.onclick=()=>choose(c);
     box.appendChild(b);
   });
   $('text-panel').scrollTop=0;
+  /* a11y: move focus to the fresh passage so screen readers announce it and
+     keyboard users land in the new node, not on the last button they clicked */
+  const nt=$('node-title'); if(nt){ nt.setAttribute('tabindex','-1'); nt.focus({preventScroll:true}); }
   saveRun();
 }
 
@@ -433,7 +465,12 @@ $('btn-lastpage').onclick=()=>{
 /* ---------------- debug (~) & keys ---------------- */
 document.addEventListener('keydown',e=>{
   const inField=e.target&&e.target.matches&&e.target.matches('input,select,textarea');
+  /* Escape closes the gallery overlay from anywhere */
+  if(e.key==='Escape' && !$('gallery').classList.contains('hidden')){
+    return $('gallery-close').click();
+  }
   if(!inField){
+    if(!$('gallery').classList.contains('hidden')) return; /* overlay owns keys while open */
     if(!$('game-screen').classList.contains('hidden') && /^[1-9]$/.test(e.key)){
       const b=[...document.querySelectorAll('#choices .choice')][+e.key-1];
       if(b){ b.focus(); b.click(); return; }

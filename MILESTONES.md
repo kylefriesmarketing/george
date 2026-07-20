@@ -264,8 +264,20 @@ HUD). Unlocks after Book Two is told.
 - [x] **GATE:** soak 1500 green; typewriter types + completes; HUD hidden cold; cold deed
       awarded on The Other Uniform; caption + card + toast verified; console clean; deployed.
 
----
+## M10 — THE KEEPER (capstone + completion + a11y) — ✅ DONE 2026-07-20
 
-**Order of battle if a session is short:** M0+M1 are one sitting (the slice proves the voice).
+- [x] **The Keeper capstone**: gated on all three books + the roll (keeperReady = e_roll &&
+      e_horse && e_relay); club choice → n_k1 → e_keeper (kind true) "The Light Does Not Go
+      Out" — the old man's fear was being the last one who knew; the frame passes to her (4
+      variants: give the notebook / sworn in / the map from the pocket / her name on the
+      strength). Deed 32 "The Keeper"; her line. Gate proven exact (none/roll/roll+horse all
+      false; all-three true).
+- [x] **Completion strip**: title screen shows 4 pillars (Book One / Two / Three / roll) →
+      Keeper note; guides completionists to the last page.
+- [x] **Accessibility pass**: focus moves to node-title on every render (SR announces the new
+      passage); gallery opens focus the close button + Escape closes from anywhere + overlay
+      owns keys while open; per-choice aria-labels ("Choice N: …").
+- [x] **GATE:** soak 2500 green; live end-to-end Keeper telling (choice first & gated, node,
+      ending, deed, completion note, Tellings entry); gallery focus+Esc; console clean. 0cr. M0+M1 are one sitting (the slice proves the voice).
 M2 is the long march — the economy first, then beats in calendar order. M3 before ANY art.
 M4/M5 can swap if credits are thin (audio is free, art isn't).

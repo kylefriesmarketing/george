@@ -97,6 +97,7 @@ const mentions = {
   thedoor:  { t:'The Door Not Knocked',      hint:'Walk past your own street in Book Three, and keep walking.' },
   handtohand:{ t:'Hand to Hand',             hint:'Guard every link of the chain the careful way.' },
   ledger:   { t:'The Ledger of Hands',       hint:'Finish the third telling — all of it, fates included.' },
+  keeper:   { t:'The Keeper',                hint:'Tell all three books, answer the roll — and read her the last page that was never in the notebook.' },
   nonames:  { t:'No Names, No Pack Drill', hint:'Give the interrogator nothing — twice.' },
   watcher:  { t:'Eyes Open',               hint:'Learn the wire before you touch it.' },
   firstsand:{ t:'First Sand',              hint:'Carry your first bag down a trouser leg.' },
@@ -130,6 +131,9 @@ n_club:{ region:'club', reg:'elegy', title:'More Chairs Than Men',
     return base+`\n\nI have told her this before${P.runs>1?' — '+(P.runs>4?'more times than the waiters approve of':P.runs+' times now'):''}, and it has come out different every time, because that is the only way to tell all of it.\n\n${ask}\n\nI look at the folded blazer at the end of the table, and the folded blazer looks back.`;
   },
   choices:[
+    { t:'She is not holding the notebook tonight. It is closed on the table between you, all three books in it, and her hand is flat on the cover the way a man rests a hand on a stone he has carried a long way. “Grandad,” she says — and it takes you a second to hear that she has, at last, called YOU that — “I have all of it now. Read me the last page. The one that isn’t in the notebook yet.”',
+      pre:'★★★ the keeper', req:(S,P)=>keeperReady(P),
+      fx:(S,P)=>{ award(P,'keeper'); }, go:'n_k1' },
     { t:'Begin where it begins: with an engine on fire.', pre:'tell it forward',
       fx:(S,P)=>{P.frame='fire';}, go:'n_fire' },
     { t:'Begin with the names. Seven in the crew, six hundred in the compound. She should have the names first.',
@@ -147,6 +151,20 @@ n_club:{ region:'club', reg:'elegy', title:'More Chairs Than Men',
     { t:'Tonight the secretary reads the roll at nine — and tonight, for the first time, you know all of it. Every man, told to the end. Stand, and answer.',
       pre:'★ the log is complete', req:(S,P)=>logComplete(P),
       fx:(S,P)=>{ award(P,'perardua'); }, end:'e_roll' },
+  ]},
+
+/* ---------- THE KEEPER — the capstone frame beat (M10) ---------- */
+n_k1:{ region:'club', reg:'elegy', title:'The Keeper',
+  text:(S,P)=>`The last page. The one that isn’t in the notebook, because I have never once been able to say it out loud, and a thing you cannot say does not go in a notebook. Here it is, love. Here is the whole of it, the part under the part.\n\nI have been afraid, my entire life since 1945, of the wrong thing. I thought I was afraid of the wire, the list, the road. I was not. I was afraid of being the last one who knew. Every man at this table who could check my facts is a name on a wall or an empty chair with a blazer on it, and for years the arithmetic that woke me at three in the morning was not the fifty. It was this: when I go, they go. The forger’s eyes. The courier girl straightening a stranger’s collar. Zabek choosing the face every morning. Tiny and his marrows. The tunnel named after my aircraft, still holding, in the dark, that no living soul but me knew how to find. I was the last light left on over all of it, and lights go out.\n\nAnd then you sat down backwards in a chair, with your grandfather’s laugh, and you made me tell it. Not once — you made me tell it until it came out true. You caught me flinching and you held the wheel. You read the fates I skipped. You ruled a box in ink around the names we lost. You have the three books now, love, all of them, every man told to the end, the roll answered — and do you understand what that means? It means I can stop being afraid. It means the light does not go out when I do. It means the story found a second keeper before it needed one.`,
+  choices:[
+    { t:'Give her the notebook. Not to read from — to keep. Close his hand over hers on the cover, and let the frame pass, here, at the table, while there is still a hand to pass it with.',
+      pre:'the light does not go out', fx:(S,P)=>{ S.flags.kgave=1; }, end:'e_keeper' },
+    { t:'Tell her the last true thing: that she is not Tiny’s granddaughter to you anymore. She is the keeper of Hut 104, sworn in the way you were sworn in, hand on nothing, eyes on hers.',
+      pre:'sworn in', fx:(S,P)=>{ S.flags.ksworn=1; }, end:'e_keeper' },
+    { t:'Say nothing you can’t get through. Just take out the pencil-drawn map from your breast pocket — the camp, the pines, the line of a tunnel, north — the one the navigator drew on this tablecloth forty years running, and put it in her hands.',
+      pre:'the map from the pocket', fx:(S,P)=>{ S.flags.kmap=1; }, end:'e_keeper' },
+    { t:'Answer the roll one more time, quietly, just the two of you — every name, and then hers added to the end of it, because she is on the strength now, and the strength is what survives.',
+      pre:'her name on the strength', fx:(S,P)=>{ S.flags.kroll=1; }, end:'e_keeper' },
   ]},
 
 /* ---------- CH 1: THE FALL ---------- */
@@ -1207,6 +1225,10 @@ e_relay:{ kind:'home', art:'pyrenees', title:'The Relay',
   text:(S,P)=>`Three books now, love, and she has all of them: the one where the digging cost everything, the one where the daft thing was allowed to work, and this one — the one that is not an escape story at all, because nobody escapes alone. Nobody ever escaped alone. The tunnel was six hundred men; the horse was a compound; and the long way round was a continent of lamplit kitchens deciding, one stranger at a time, that decency outranked survival.\n\nHe went back, you know. The Dutchman. After the war, with his wife — the whole road in reverse, north from the mountains, farm by farm, house by house, finding the hands. Some he found. Some had left no address in this world. At the hill farm they set his place at the long table as if he had stepped out for an hour; at the canal town he stood at last on his own street, in daylight, hat OFF; and on a saddle of grey rock in the Pyrenees he left, wedged where a guide is known to have spat, a pair of rope-soled espadrilles, worn once, size irrelevant. The plaque people never understood it. The mountain people did.\n\nAt our table the candles are low and the staff have given up on us beautifully. She closes the notebook on the ledger of hands and holds it to her chest the way you hold what you intend to keep. Three books. All of it told. And somewhere under Silesia, a tunnel named after my aircraft is still holding, flush to the frame, in the dark, going nowhere, carrying everything.`,
 },
 
+e_keeper:{ kind:'true', art:'club', title:'The Light Does Not Go Out',
+  text:(S,P)=>`${S.flags.kgave?`She takes the notebook. She does not open it. She holds it against her the way you hold what you have decided to carry the rest of the way, and she nods once, the small formal nod of a soldier accepting an order she intends to die before failing.`:''}${S.flags.ksworn?`She does not say she accepts. She just squares her shoulders, the way the whole compound squared its shoulders at an appell it had decided to survive, and I see her grandfather in the set of them, and I know Hut 104 has its keeper.`:''}${S.flags.kmap?`She looks at the map a long time — the pines, the wire, the line running north to nothing and everything — and then she folds it along the navigator’s own creases and puts it in her own breast pocket, over her own heart, and pats it flat, exactly as I have done ten thousand mornings.`:''}${S.flags.kroll?`She lets me finish the roll. And when I add her name to the end of it, her voice does the thing voices do, and she answers herself — “Here” — barely a breath, and it is the bravest single syllable I have heard since a Welshman told me not to sweat on Norway.`:''}\n\nOutside the club the city is doing what cities do, indifferent and lit, and I find for the first time in fifty years that I do not mind the indifference, because indifference is what peace sounds like from the inside, and we bought it, all of us, the ones who came home difficult and the ones who did not come home at all.\n\nThey will read the roll again next year. Fewer of us each time; that is the arithmetic and it does not negotiate. But it will be read, love, after I am an empty chair with a blazer on it — because you have all of it now, every man, every foot, every weather, told to the end and true. The tunnel is three hundred and thirty-six feet long. It still runs from Hut 104 into the pines. And for as long as one person living knows how to find it in the dark, no one who dug it is entirely gone.\n\nYou were the tunnel out, in the end. Not for me. For all of them. I only had to keep the light on until you got here.\n\nThe candles are guttering and the staff have given up on us with love, and my friend’s granddaughter — the keeper of Hut 104 — takes my arm to walk me out into the ordinary, unbearable, hard-won evening. All present. All accounted for. Good night, love. Mind the step.`,
+},
+
 e_pause:{ kind:'pause', art:'club', title:'The Telling Pauses',
   text:`In the club, the girl looks up from the tablecloth where she has been writing feet with her finger.\n\n“That’s not an ending,” she says, quite rightly.\n\nNo. That is where a man puts a bookmark. The rest of it wants a steadier glass than this one, and the club does not close till late.` },
 
@@ -1231,6 +1253,7 @@ const her = {
   e_pause:`“Next time,” she says, “no bookmark.”`,
   e_horse:`“And you always catch the boat?” Every time, love. In this one, everybody always catches the boat. “Good,” she says, and writes it in the notebook under the ledger, in capitals, like a course confirmed: ALL THREE.`,
   e_relay:`At the door, coat on, she stops. “The two blank lines,” she says. “I’m leaving them blank in mine too. But I’m ruling the box around them in ink.” In ink, love. That is exactly the trade: the names we lose, the box we keep.`,
+  e_keeper:`There is no line from her tonight, love. She has stopped being the reader and become the keeper, and the keeper does not comment on the book — the keeper carries it. That is the whole of what I have left to teach, and she learned it before I finished saying it.`,
 };
 
 /* ---------------- helpers used by choices (engine binds award/logSee) -- */
@@ -1242,6 +1265,9 @@ const crewChk=(S,P)=>{ if(S.crew>=5) award(P,'crewtrue'); };
 const dstreak=(S,P)=>{ S.streak=(S.streak||0)+1; if(S.streak>=4) award(P,'footaday'); };
 /* the true ending's gate: every name in the Log told to the end */
 const logComplete=(P)=>Object.keys(cast).every(k=>(P.log[k]||0)>=3);
+/* the top of the pyramid: all three books told AND the roll answered.
+   e_roll already implies logComplete, so this is the true capstone gate. */
+const keeperReady=(P)=>!!(P.endings && P.endings.e_roll && P.endings.e_horse && P.endings.e_relay);
 /* the draw — idempotent, callable from text AND fx so no path skips it */
 const drawNums=(S)=>{ if(!S.num){ const committee=S.contrib>=4||S.role==='digger';
   S.num = committee ? (8+(4-Math.min(4,S.contrib))*5) : (88+(S.kit>=70?0:14));

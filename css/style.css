@@ -250,6 +250,16 @@ kbd{ font-family:'Courier New',monospace; background:#00000018; padding:0 4px; b
   #title-art{ margin:18px 14px 0; height:210px; }
   .ending-inner{ padding:18px 22px; }
 }
+/* ------- M10: completion strip + Keeper ------- */
+.title-completion{ margin:12px auto 0; max-width:520px; }
+.comp-pillars{ display:flex; gap:10px; justify-content:center; margin-bottom:6px; }
+.comp-dot{ width:13px; height:13px; border:1.5px solid #b3ab8f; border-radius:50%;
+  display:inline-block; transition:all .3s; }
+.comp-dot.on{ background:#8c2f24; border-color:#8c2f24; box-shadow:0 0 6px #8c2f2466; }
+.comp-note{ font-size:12.5px; font-style:italic; color:#8a8266; }
+.comp-note.ready{ color:#8c2f24; }
+.comp-note.keeper{ color:#3c6b38; font-weight:bold; font-style:normal; letter-spacing:.5px; }
+
 /* ------- M9: options ------- */
 .opt-row{ display:flex; align-items:center; gap:8px; flex-wrap:wrap; padding:10px 2px;
   border-bottom:1px solid #d8ceb2; }
