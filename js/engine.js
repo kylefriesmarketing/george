@@ -16,9 +16,17 @@ function defP(){ return { runs:0, endings:{}, log:{}, mentions:{}, frame:null,
   names:{ hero:'Kit', friend:'Freddie' }, lastTitle:null, journal:[],
   opts:{ size:'normal', reveal:'unfurl', contrast:0, cold:0, nums:0 } }; }
 function loadP(){ try{ const p=JSON.parse(localStorage.getItem(K_P));
-  if(p){ const d=defP(); const m=Object.assign(d,p);
-    m.names=Object.assign({hero:'Kit',friend:'Freddie'}, p.names||{});
-    m.opts=Object.assign({size:'normal',reveal:'unfurl',contrast:0,cold:0,nums:0}, p.opts||{});
+  if(p && typeof p==='object' && !Array.isArray(p)){ const d=defP(); const m=Object.assign(d,p);
+    /* a damaged persist must not leave a string/array where a map is expected —
+       every reader below does Object.keys()/[id]++ and would misbehave silently */
+    const plain=o=>o && typeof o==='object' && !Array.isArray(o);
+    if(!plain(m.endings)) m.endings={};
+    if(!plain(m.log)) m.log={};
+    if(!plain(m.mentions)) m.mentions={};
+    if(!Array.isArray(m.journal)) m.journal=[];
+    if(typeof m.runs!=='number' || !Number.isFinite(m.runs) || m.runs<0) m.runs=0;
+    m.names=Object.assign({hero:'Kit',friend:'Freddie'}, plain(p.names)?p.names:{});
+    m.opts=Object.assign({size:'normal',reveal:'unfurl',contrast:0,cold:0,nums:0}, plain(p.opts)?p.opts:{});
     return m; } }catch(e){}
   const fresh=defP();
   /* first-ever load: seed options from the OS accessibility preferences */
@@ -45,13 +53,23 @@ function importCode(str){
   catch(e){ return { ok:false, msg:'That code is damaged — check it copied whole.' }; }
   if(!d || typeof d!=='object') return { ok:false, msg:'That code is empty.' };
   const before={ e:Object.keys(P.endings).length, m:Object.keys(P.mentions).length };
-  /* union-max merge: counts add up to the larger, log takes the deeper stage */
-  const maxMerge=(a,b)=>{ const o=Object.assign({},a||{});
-    for(const k in (b||{})) o[k]=Math.max(o[k]||0, b[k]||0); return o; };
+  /* union-max merge: counts take the larger, log takes the deeper stage.
+     Hardened: only plain objects merge, only finite non-negative numbers land —
+     a corrupt or hand-made code can't inject index keys or poison a count with NaN. */
+  const plain=o=>o && typeof o==='object' && !Array.isArray(o);
+  const num=v=>{ const n=Number(v); return Number.isFinite(n) && n>0 ? Math.floor(n) : 0; };
+  const maxMerge=(a,b)=>{ const o=Object.assign({}, plain(a)?a:{});
+    if(!plain(b)) return o;
+    for(const k of Object.keys(b)){
+      if(k==='__proto__'||k==='constructor'||k==='prototype') continue;
+      o[k]=Math.max(num(o[k]), num(b[k]));
+      if(!o[k]) delete o[k];
+    }
+    return o; };
   P.endings=maxMerge(P.endings, d.endings);
   P.mentions=maxMerge(P.mentions, d.mentions);
   P.log=maxMerge(P.log, d.log);
-  P.runs=Math.max(P.runs||0, d.runs||0);
+  P.runs=Math.max(num(P.runs), num(d.runs));   /* num() or a string 'runs' makes this NaN */
   if(d.lastTitle && !P.lastTitle) P.lastTitle=d.lastTitle;
   if(Array.isArray(d.journal) && d.journal.length>(P.journal||[]).length) P.journal=d.journal.slice(-60);
   if(d.names && (!P.runs || !P.names)) P.names=Object.assign(P.names||{}, d.names);
@@ -337,7 +355,7 @@ $('btn-afterword').onclick=()=>{
   show('gallery');
 };
 $('btn-tellings').onclick=()=>{
-  const ids=Object.keys(ENDINGS).filter(i=>i!=='e_pause'||P.endings[i]);
+  const ids=Object.keys(ENDINGS);
   const journal=(P.journal||[]).slice().reverse();
   $('gallery-title').textContent='The Tellings';
   $('gallery-body').innerHTML=`<div class="gallery-sub">How it has come out so far. The real endings arrive as the telling reaches them.</div>
@@ -488,7 +506,9 @@ function ending(id){
   P.journal=P.journal||[];
   P.journal.push({ e:id, n:P.runs, t:fmt(e.title) });
   if(P.journal.length>60) P.journal.shift();
-  if(S && S.flags.coldRun && P.opts.cold && !['e_horse','e_relay','e_pause','e_roll'].includes(id))
+  /* the cold deed is for a BOOK ONE telling only — the other books and the
+     frame capstones don't run the ledger, so they can't earn it */
+  if(S && S.flags.coldRun && P.opts.cold && !['e_horse','e_relay','e_roll','e_keeper'].includes(id))
     award(P,'cold');
   lastEnd={ id, art:e.art, title:fmt(e.title), kind:e.kind, n:P.runs+0 };
   saveP(); clearRun();

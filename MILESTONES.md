@@ -328,6 +328,33 @@ HUD). Unlocks after Book Two is told.
 - [x] **GATE:** soak green, companion renders (14 events, interlocks, untold-marking, no
       overflow), every tap target ≥44px, short-screen rule proven, console clean, deploy.
 
+## M14 — THE BUG SWEEP (0cr) — ✅ DONE 2026-07-20
+
+A real audit, not a soak: static reachability + 12,000 seeded dynamic walks + hostile-input
+probing. **Four genuine bugs found and fixed; two false alarms correctly dismissed.**
+
+- [x] **BUG · the cold deed could be earned from the wrong book.** "The Unwatched Ledger" is a
+      Book One award, but `e_keeper` was missing from the exclusion list, so telling the Keeper
+      capstone in Cold Telling granted it. Fixed (list now `e_horse/e_relay/e_roll/e_keeper`).
+- [x] **BUG · dead content: `e_pause`.** The M1 bookmark ending had ZERO references since M2
+      redirected The Garden into the trade year — unreachable, yet defined, and inflating the
+      ending list. Removed (with its `her` line and the special-case gallery filter). Endings
+      15→14 defined, 14 reachable, which now matches the "one of 14 tellings" share card and
+      the hub's total. Verified a legacy save still renders (journal keeps its own stored title).
+- [x] **BUG · import merge could be poisoned.** `Math.max(count, 'string')` = **NaN**, and
+      `for..in` over a string/array payload injected index keys. A corrupt or hand-made code
+      could NaN a legitimate ending count. Hardened: plain-object check, finite-positive
+      coercion, dangerous-key skip. Legit merges verified unaffected.
+- [x] **BUG · `runs` had the same NaN hole** (found on re-test — `Math.max(4,'lots')`), which
+      would have rendered "you have told it NaN times". Fixed with the same coercion.
+- [x] **HARDENED · `loadP`**: a damaged persist can no longer leave a string/array where a map
+      is expected (endings/log/mentions/journal/runs all type-checked).
+- [x] *False alarms, correctly dismissed:* `n_docks`/`e_needle` never appear in random walks —
+      not dead, just gated behind KIT≥75 by design (proven reachable by targeted walk, kit 100).
+      Don't "fix" this; the Needle's Eye is meant to be the rarest road.
+- [x] **GATE:** soak green; 9,000-walk re-audit clean (0 errors, no orphans beyond the rare
+      gate); hostile + legitimate import both verified; legacy-save render; console clean.
+
 ---
 M0+M1 are one sitting (the slice proves the voice).
 M2 is the long march — the economy first, then beats in calendar order. M3 before ANY art.
