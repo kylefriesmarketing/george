@@ -1302,6 +1302,28 @@ const glossary = [
 ];
 
 /* ======================================================================
+   THE READER'S COMPANION — the three books are one history, and they
+   overlap. This is the true spine, so you can see where each telling
+   sits inside the others. book: 1|2|3|0 (0 = shared / the camp itself)
+   ====================================================================== */
+const companion = [
+  { d:'October 1942', b:1, t:'A Lancaster goes down over the Ruhr. Two parachutes out of seven, a beet field at dawn, and the sentence: <em>for you the war is over.</em> Book One begins here — and so, eventually, do the other two, because all three men in this history end up behind the same wire.' },
+  { d:'Spring 1943', b:0, t:'The North Compound opens at Sagan: raw huts, fresh stumps, seismograph microphones along the wire, and sand so yellow it betrays a tunnel from thirty feet. Within weeks the escape organization begins <b>three tunnels at once</b> — Tom, Dick and Harry — on the reasoning that finding one proves the compound clean.' },
+  { d:'July 1943', b:2, t:'Next door in the East Compound, two lieutenants propose the daftest idea of the war: if the tunnel cannot start near the wire, the <em>entrance must walk there</em>. The vaulting horse goes out after morning appell, with a man folded up inside it. <b>Book Two runs in the same months as Book One</b> — the compound of Tom and Harry never knew.' },
+  { d:'September 1943', b:1, t:'A probe goes through. <b>Tom is found and blown up</b> in front of the whole camp — a hundred and forty feet, a summer, gone in one crump. The ferret chief turns a piece of the shoring over and calls it good work; he means it. Harry goes on, slower and deeper.' },
+  { d:'October 1943', b:2, t:'A hundred feet dug with a bowl, under boots, in three months. At dusk the last two feet come away like a cork: <b>three men out of the horse, and all three reach Sweden and home.</b> No list, no urns, no remainder. It happens while Book One is burying Tom and starting the winter halt.' },
+  { d:'Winter 1943', b:1, t:'Harry is sealed under a warm stove. Dispersal is impossible on snow; the ferrets winter indoors with nothing to do but think. Rations thin, parcels come late, and a man walks to the warning wire at first light.' },
+  { d:'January–March 1944', b:1, t:'Harry driven flat out: sand under the theatre seats, a fall of ceiling at two hundred and sixty feet, the halfway houses named Piccadilly and Leicester Square. On <b>14 March the survey line is crossed — three hundred and thirty-six feet.</b> The forged papers carry dates, so the escape now has a deadline with the Reich\'s own stamp on it.' },
+  { d:'The night of 24–25 March 1944', b:0, t:'The trap is frozen for ninety minutes. The tunnel breaks <b>ten feet short of the trees</b>, in open snow; a rope run to a blind behind the pines carries one tug for wait, two for go. An air-raid blackout kills the tunnel lights with men inside. At 4:55 the seventy-seventh man is seen, and a shot ends it. <b>Seventy-six out.</b> — <span class="cmp-x">The eighteenth man down that ladder is the traveller of Book Three.</span>' },
+  { d:'Late March – April 1944', b:1, t:'Seventy-three of the seventy-six are retaken. A typed list goes up under the eagle by the cookhouse: forty-one names, then more, all that week. <b>It stops at fifty.</b> The Kommandant who ran his camp like a soldier is arrested and court-martialled. The camp\'s laugh stops.' },
+  { d:'April–July 1944', b:3, t:'While the list is still growing, one of the seventy-six is being passed across a continent by strangers: an attic by a canal, a courier girl of nineteen, a priest who halves his bread, a forger, a hill farm, a smuggler in rope-soled shoes. <b>Four months, and not one mile of it alone.</b>' },
+  { d:'July 1944', b:3, t:'Gibraltar, and a Dakota home — <b>the third of the three home runs</b> of the Great Escape. A debriefing officer says "you are one of three." The answer worth keeping: <em>"No, sir. One of three hundred."</em>' },
+  { d:'Summer–Autumn 1944', b:1, t:'The urns come back by rail, and the prisoners are permitted to build a memorial vault in the pines — it stands there today. Then the camp doctor argues that the digging was never only a door, and the last tunnel is begun under the theatre: going nowhere, aimed at nothing. <b>Its real name was George.</b>' },
+  { d:'January 1945', b:0, t:'Three in the morning, an hour\'s notice, thirty below: the camp is marched west ahead of the Front, hauling sledges built from tunnel bed-boards. <b>The Long March.</b> The men the garden kept steady now keep each other alive on the road.' },
+  { d:'May 1945', b:0, t:'Liberation, a boat, and a country that says "at least you sat it out safe." Fifty men do not come back. Three came home the long way, and one of them spent the rest of his life going back for the others — first by looking for them, and then, when there was no one left to look for, by telling it.' },
+];
+
+/* ======================================================================
    THE AFTERWORD — the last page. The real record. Ships with the game.
    ====================================================================== */
 const afterword = `<h3>The Fifty</h3>
@@ -1316,6 +1338,6 @@ const afterword = `<h3>The Fifty</h3>
 <p><em>The characters in this game are inventions wearing the true events. The names in this story were changed. These were the real ones. If the game sent you here wanting more, the record is rich: the escapers themselves wrote it down, and the fifty names are read aloud at RAF stations to this day.</em></p>
 <p class="af-close"><em>This happened. The names belong to no one, so that the story can belong to all of them.</em></p>`;
 
-return { nodes, endings, regions, CHAPTERS, cast, mentions, glossary, afterword, her,
+return { nodes, endings, regions, CHAPTERS, cast, mentions, glossary, afterword, her, companion,
   bindHelpers, bindP, TUNNEL_GOAL:336, START:'n_club' };
 })();

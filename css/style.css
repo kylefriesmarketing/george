@@ -250,6 +250,33 @@ kbd{ font-family:'Courier New',monospace; background:#00000018; padding:0 4px; b
   #title-art{ margin:18px 14px 0; height:210px; }
   .ending-inner{ padding:18px 22px; }
 }
+/* ------- M13: the Reader's Companion (the true spine) ------- */
+.cmp-key{ display:flex; gap:8px; flex-wrap:wrap; margin:0 0 16px; }
+.cmp-tag{ font-family:'Courier New',monospace; font-size:10.5px; letter-spacing:1px;
+  text-transform:uppercase; padding:4px 9px; border:1px solid; border-radius:2px; }
+.cmp-tag em{ opacity:.65; text-transform:none; letter-spacing:0; }
+.cmp-line{ position:relative; padding-left:18px; }
+.cmp-line::before{ content:''; position:absolute; left:4px; top:6px; bottom:6px; width:2px;
+  background:linear-gradient(#c9c1a4,#c9c1a4); }
+.cmp-ev{ position:relative; padding:10px 0 14px 14px; }
+.cmp-ev::before{ content:''; position:absolute; left:-18px; top:16px; width:9px; height:9px;
+  border-radius:50%; border:2px solid #efe6cf; background:#8a8266; }
+.cmp-date{ font-family:'Courier New',monospace; font-size:11px; letter-spacing:2px;
+  text-transform:uppercase; color:#8a8266; margin-bottom:3px; }
+.cmp-book{ display:block; font-family:'Courier New',monospace; font-size:10px; letter-spacing:1.5px;
+  text-transform:uppercase; margin-bottom:4px; }
+.cmp-body{ font-size:14.5px; line-height:1.58; color:#33301f; }
+.cmp-body b{ color:#2c2a22; }
+.cmp-body em{ color:#5a5340; }
+.cmp-x{ display:block; margin-top:7px; padding-left:10px; border-left:3px solid #33507a;
+  font-style:italic; color:#33507a; font-size:14px; }
+.b1 .cmp-book,.cmp-tag.b1{ color:#8c2f24; border-color:#8c2f24; }
+.b2 .cmp-book,.cmp-tag.b2{ color:#8c6f1d; border-color:#8c6f1d; }
+.b3 .cmp-book,.cmp-tag.b3{ color:#33507a; border-color:#33507a; }
+.b0 .cmp-book,.cmp-tag.b0{ color:#5a5340; border-color:#b3ab8f; }
+.cmp-ev.b1::before{ background:#8c2f24; } .cmp-ev.b2::before{ background:#8c6f1d; }
+.cmp-ev.b3::before{ background:#33507a; } .cmp-ev.b0::before{ background:#8a8266; }
+
 /* ------- M11: focus-visible ring (keyboard nav made visible) ------- */
 a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visible,
 select:focus-visible, [tabindex]:focus-visible{
@@ -323,6 +350,26 @@ body.cold-hud #hud{ display:none; }
 #ending-art{ border:10px solid #f7f2e4; box-shadow:0 4px 16px #0007; transform:rotate(-.4deg); }
 #ending-caption{ font-family:'Courier New',monospace; font-size:12px; letter-spacing:1.5px;
   color:#8a8266; margin:10px 0 0; font-style:italic; }
+/* ------- M13: touch tap targets (pointer:coarse = any touch device) -------
+   Measured before: small menu buttons 30px, option buttons 26px, inputs 28px —
+   all under the 44px guidance. Sized up without touching the desktop look. */
+@media (pointer: coarse), (max-width: 720px){
+  .menu-btn{ min-height:48px; }
+  .menu-btn.small{ min-height:44px; padding:11px 20px; }
+  .opt-btn{ min-height:44px; padding:10px 16px; }
+  .names-row input, .nb-in{ min-height:44px; font-size:16px; } /* 16px stops iOS zoom-on-focus */
+  .nb-code{ min-height:56px; font-size:12px; }
+  .choice{ padding:12px 14px; }
+  #gallery-close{ min-height:44px; }
+  .j-title{ display:inline-block; padding:6px 0; }   /* rename target, not a hairline */
+  .j-input{ min-height:44px; font-size:16px; }
+}
+/* short screens: give the prose more room before it needs a scroll */
+@media (max-height:740px) and (max-width:720px){
+  #scene-wrap{ height:150px; }
+  #title-art{ height:170px; }
+}
+
 @media (max-width:480px){
   .game-title{ letter-spacing:3px; }
   .title-inner{ padding:16px 16px 8px; }

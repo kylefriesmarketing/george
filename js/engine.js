@@ -316,6 +316,21 @@ $('btn-glossary').onclick=()=>{
     +STORY.glossary.map(([w,d])=>`<div class="crew-entry"><div class="crew-name">${w}</div><div class="crew-note">${d}</div></div>`).join('');
   show('gallery');
 };
+$('btn-companion').onclick=()=>{
+  const told={ 1: Object.keys(P.endings||{}).some(k=>!['e_horse','e_relay','e_pause','e_keeper'].includes(k)),
+    2: !!(P.endings||{}).e_horse, 3: !!(P.endings||{}).e_relay };
+  const BOOK={ 0:{n:'the camp', c:'b0'}, 1:{n:'Book One — the tunnels', c:'b1'},
+    2:{n:'Book Two — the horse', c:'b2'}, 3:{n:'Book Three — the relay', c:'b3'} };
+  $('gallery-title').textContent='The Reader’s Companion';
+  $('gallery-body').innerHTML=`<div class="gallery-sub">Three tellings, one history — and they overlap. This is the true spine, so you can see where each book sits inside the others. Nothing here is invented; the last page has the names.</div>
+    <div class="cmp-key">${[1,2,3].map(b=>`<span class="cmp-tag ${BOOK[b].c}">${BOOK[b].n}${told[b]?'':' <em>· untold</em>'}</span>`).join('')}</div>
+    <div class="cmp-line">`+STORY.companion.map(e=>`
+      <div class="cmp-ev ${BOOK[e.b].c}">
+        <div class="cmp-date">${e.d}</div>
+        <div class="cmp-body"><span class="cmp-book">${BOOK[e.b].n}</span>${e.t}</div>
+      </div>`).join('')+`</div>`;
+  show('gallery');
+};
 $('btn-afterword').onclick=()=>{
   $('gallery-title').textContent='The Last Page';
   $('gallery-body').innerHTML=`<div class="afterword">${STORY.afterword}</div>`;

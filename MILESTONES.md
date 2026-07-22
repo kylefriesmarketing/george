@@ -311,6 +311,23 @@ HUD). Unlocks after Book Two is told.
 - [x] **GATE:** soak green; robustness matrix + real old-save resume verified; SMIL suppressed
       under forced reduced-motion; console clean; deploy.
 
+## M13 — THE COMPANION & THE PHONE (0cr) — ✅ DONE 2026-07-20
+
+- [x] **The Reader's Companion** (`STORY.companion`, 14 dated events + gallery page): the true
+      spine of all three books on one timeline, colour-keyed by book, so the overlaps become
+      visible — the horse was dug in the same months Tom was found; the relay man was the
+      eighteenth down the ladder on the night that produced the list. Marks which books you've
+      told. Nothing invented; the last page still holds the names.
+- [x] **Mobile deep-pass** (the outstanding item from M5's notes). MEASURED first: small menu
+      buttons 30px, option buttons 26px, inputs 28px, close 30px — all under the 44px guidance.
+      Fixed via `(pointer: coarse), (max-width:720px)` → now 48/44/44/44/44/44, all verified.
+      16px inputs stop iOS zoom-on-focus. Short screens (≤740px tall) shrink the scene 200→150
+      so prose starts 50px higher and is readable without scrolling (verified at 375×667).
+      ⚠️ NOTE: the Browser-pane emulator does NOT report `pointer: coarse`, which is why the
+      width query is there too — don't remove it thinking it's redundant.
+- [x] **GATE:** soak green, companion renders (14 events, interlocks, untold-marking, no
+      overflow), every tap target ≥44px, short-screen rule proven, console clean, deploy.
+
 ---
 M0+M1 are one sitting (the slice proves the voice).
 M2 is the long march — the economy first, then beats in calendar order. M3 before ANY art.
