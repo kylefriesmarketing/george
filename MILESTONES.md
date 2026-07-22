@@ -355,6 +355,33 @@ probing. **Four genuine bugs found and fixed; two false alarms correctly dismiss
 - [x] **GATE:** soak green; 9,000-walk re-audit clean (0 errors, no orphans beyond the rare
       gate); hostile + legitimate import both verified; legacy-save render; console clean.
 
+## M15 — THE INJECTION SWEEP (0cr) — ✅ DONE 2026-07-20
+
+Second audit, different angle: M14 covered graph/data integrity, this one covered **runtime,
+input handling and injection**. Two real bugs — one of them the most serious found in the
+project — plus one self-inflicted crash caught before it shipped.
+
+- [x] **SECURITY · stored XSS through shared notebook codes.** Names are the only player-authored
+      text reaching `innerHTML`, and **M11 made names travel inside shareable `GG1.` codes**. A
+      crafted code could carry `<svg onload=…>` and execute in the recipient's browser when the
+      game rendered their name. The 18-char cap was NOT a defence — it only shortens, and a
+      14-char payload fits (proven). Scope is limited (static site, no backend/auth/valuable
+      cookies) but a hostile code could wipe or rewrite a victim's notebook. **Fixed at both
+      ends:** `cleanName()` strips `<>`/collapses whitespace/caps at every boundary (typed
+      names, imported names, loaded persist) and `esc()` HTML-escapes at render.
+- [x] **BUG · `$` patterns in names corrupted prose.** `String.replace` with a replacement
+      *string* interprets `$&`/`$1`, so a player named `$&` saw the literal token `{HERO}` in
+      the text. Fixed by using function replacements.
+- [x] **CAUGHT PRE-SHIP · TDZ white-screen.** The first version of the fix declared
+      `cleanName`/`esc` in the text section, but `let P=loadP()` runs at module load and calls
+      it — "Cannot access before initialization" would have **white-screened the whole game**.
+      Helpers moved above `loadP` with a comment saying why. *(Lesson: a security fix deserves
+      the same boot check as a feature.)*
+- [x] **GATE:** module boots (TDZ regression), soak green, hostile code sanitised on import
+      (`<svg onload=…>` → inert text, payload never fires, `__pwn` stayed 0), no live tags in
+      prose, `$&` renders literally, normal renaming still works in prose/choices/HUD with no
+      double-escaping, console clean.
+
 ---
 M0+M1 are one sitting (the slice proves the voice).
 M2 is the long march — the economy first, then beats in calendar order. M3 before ANY art.

@@ -11,6 +11,17 @@ const K_P='gg_persist', K_R='gg_run';
 const $=id=>document.getElementById(id);
 const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
 
+/* ---------------- names: the only player-authored text that reaches innerHTML,
+   and since M11 it travels inside shareable notebook codes. Sanitised at every
+   boundary (cleanName) AND escaped at render (esc). Declared HERE, above loadP,
+   because loadP runs at module load and would hit the TDZ otherwise. --------- */
+const ESCAPES={'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'};
+const esc=s=>String(s==null?'':s).replace(/[&<>"']/g, m=>ESCAPES[m]);
+const cleanName=(v,fallback)=>{
+  const s=String(v==null?'':v).replace(/[<>]/g,'').replace(/\s+/g,' ').trim().slice(0,18);
+  return s || fallback;
+};
+
 /* ---------------- persistence: the retellings ---------------- */
 function defP(){ return { runs:0, endings:{}, log:{}, mentions:{}, frame:null,
   names:{ hero:'Kit', friend:'Freddie' }, lastTitle:null, journal:[],
@@ -25,7 +36,8 @@ function loadP(){ try{ const p=JSON.parse(localStorage.getItem(K_P));
     if(!plain(m.mentions)) m.mentions={};
     if(!Array.isArray(m.journal)) m.journal=[];
     if(typeof m.runs!=='number' || !Number.isFinite(m.runs) || m.runs<0) m.runs=0;
-    m.names=Object.assign({hero:'Kit',friend:'Freddie'}, plain(p.names)?p.names:{});
+    const pn=plain(p.names)?p.names:{};
+    m.names={ hero:cleanName(pn.hero,'Kit'), friend:cleanName(pn.friend,'Freddie') };
     m.opts=Object.assign({size:'normal',reveal:'unfurl',contrast:0,cold:0,nums:0}, plain(p.opts)?p.opts:{});
     return m; } }catch(e){}
   const fresh=defP();
@@ -72,7 +84,11 @@ function importCode(str){
   P.runs=Math.max(num(P.runs), num(d.runs));   /* num() or a string 'runs' makes this NaN */
   if(d.lastTitle && !P.lastTitle) P.lastTitle=d.lastTitle;
   if(Array.isArray(d.journal) && d.journal.length>(P.journal||[]).length) P.journal=d.journal.slice(-60);
-  if(d.names && (!P.runs || !P.names)) P.names=Object.assign(P.names||{}, d.names);
+  /* an imported code is untrusted text — names are scrubbed before they land */
+  if(plain(d.names) && (!P.runs || !P.names)){
+    P.names={ hero:cleanName(d.names.hero, (P.names&&P.names.hero)||'Kit'),
+              friend:cleanName(d.names.friend, (P.names&&P.names.friend)||'Freddie') };
+  }
   saveP();
   const gained={ e:Object.keys(P.endings).length-before.e, m:Object.keys(P.mentions).length-before.m };
   return { ok:true, msg:`Notebook merged. ${gained.e>0?'+'+gained.e+' telling'+(gained.e>1?'s':''):'no new tellings'}, ${gained.m>0?'+'+gained.m+' mention'+(gained.m>1?'s':''):'no new mentions'}.` };
@@ -109,8 +125,9 @@ function loadRun(){
 }
 
 /* ---------------- text ---------------- */
-function fmt(t){ let s=String(typeof t==='function'?t(S,P):t);
-  return s.replace(/\{HERO\}/g,P.names.hero).replace(/\{FRIEND\}/g,P.names.friend); }
+function fmt(t){ const s=String(typeof t==='function'?t(S,P):t);
+  const hero=esc(P.names.hero), friend=esc(P.names.friend);
+  return s.replace(/\{HERO\}/g, ()=>hero).replace(/\{FRIEND\}/g, ()=>friend); }
 
 function show(id){ ['title-screen','game-screen','ending-screen','gallery']
   .forEach(s=>$(s).classList.toggle('hidden', s!==id));
@@ -289,8 +306,9 @@ function paintCompletion(){
        : `<div class="comp-note">${pillars.filter(p=>p.on).length} of four, on the way to the last page.</div>`);
 }
 function readNames(){
-  const h=$('name-hero').value.trim(), f=$('name-friend').value.trim();
-  P.names.hero=(h||'Kit').slice(0,18); P.names.friend=(f||'Freddie').slice(0,18); saveP();
+  P.names.hero=cleanName($('name-hero').value,'Kit');
+  P.names.friend=cleanName($('name-friend').value,'Freddie');
+  saveP();
 }
 $('btn-begin').onclick=()=>{ readNames(); S=newRun(); lastCh=0; pendingDeltas=[];
   S.flags.coldRun = P.opts.cold?1:0;
