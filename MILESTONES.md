@@ -414,6 +414,49 @@ checks are the method here).
       zero horizontal overflow at 1280 and 375 (no offenders); M13 tap targets intact; contrast
       AA across all labels; console clean.
 
+## M17–M20 — THE OPUS PASS (0cr) — ✅ DONE 2026-07-20
+
+Four deep-judgment milestones in one run.
+
+**M17 · Historical accuracy audit (source-checked).** The premise is "this happened", but the
+history had been written from memory and never verified. Checked against the record and
+**corrected four real errors**: the exit came up *nearly thirty feet* short of the trees, not
+ten (fixed in the node title, escape-night prose, Book Three, the Man 77 ending, the Companion,
+the afterword and an art comment); the Wooden Horse tunnel ran ~30 inches down, not eighteen;
+the night's tunnel collapse was ~1 a.m., not past two; Piccadilly and Leicester Square sit at
+thirds of the run, not "100 and 200 feet". **Confirmed correct** and left alone: 336 ft / 30 ft
+deep, the 2-ft bore, 90-minute frozen trap, 10.30 p.m. first man, the blackout, 4:55 a.m. and
+the 77th man, 76/73/50/3, 200 planned, Tom Sept '43, Dick to camp expansion, the Horse's 114
+days and 29 Oct '43 break from East Compound, Philpot as a Norwegian margarine salesman via
+Danzig with Williams and Codner by Stettin, van der Stok 18th out reaching Gibraltar July '44.
+Afterword gained a sourcing paragraph.
+
+**M18 · The economy audit.** Built five strategy archetypes scoring every choice by meter
+deltas, 200 seeded runs each. **KIT worked** (only kit-max reaches the Needle's Eye). **CREW was
+a one-way ratchet** — 3 of 298 choices could lower it vs 32 raising it, so *every* archetype
+finished 6/6; the "Bracelet" could not fray. **KIT was free** — kit-max ended HEAT 0, CREW 6:
+strictly dominant, and fictionally absurd for the camp's riskiest work. Tuned by attaching costs
+only where the choice text already described them. Result: kit-max HEAT 0→3.1 peak, CREW range
+"always 6"→3–6, crew-lowering choices 3→6, heat-raising 9→13; the dark given-place ending now
+appears for careless play and never for crew-first play.
+
+**M19 · Editorial pass.** Measured 18,111 words before editing — and **the measurement
+contradicted the hypothesis**. Em-dashes look high (15/1000) but only *two* paragraphs carried
+4+, so it's voice, not flab; ALL-CAPS is nearly all structural (ledger headings, headstone,
+telegram); the top repeated phrases are deliberate refrains. Fixed only what was genuinely a
+crutch: "the way her grandfather…" 5→2 uses, heavy-dash paragraphs 2→0, refrains intact.
+
+**M20 · The retelling-variant system.** `STORY.retold` — marginal asides in the teller's voice
+on 14 revisited passages, in two tiers: the **second** telling ("I have told you the fire
+before…") and the **fourth and after**, when the wearing-smooth starts to trouble him ("that is
+how I know it has stopped being a memory and become a story"). Per-passage counts in `P.seen`,
+persisted and carried in the notebook code. Rendered in its own `#retold` margin block *outside*
+`#node-text` so the drop cap still belongs to the prose.
+
+- [x] **GATE:** soak green throughout; 9000 seeded walks 0 errors, all 14 endings reachable;
+      corrections verified across the rendered 151k-char corpus; tier logic proven (silent 1st,
+      a on 2nd–3rd, b on 4th); `seen` survives export→import; drop cap unaffected; console clean.
+
 ---
 M0+M1 are one sitting (the slice proves the voice).
 M2 is the long march — the economy first, then beats in calendar order. M3 before ANY art.

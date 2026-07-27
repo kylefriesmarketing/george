@@ -375,6 +375,15 @@ body.cold-hud #hud{ display:none; }
 /* a paragraph that opens on a tag (an em, a quote) must not inherit its slant */
 #node-text p:first-child::first-letter{ font-family:inherit; }
 
+/* ---- 1b. the teller's marginal note, from the second telling on ---- */
+#retold{ display:none; }
+#retold.on{ display:block; margin:0 0 16px; padding:9px 0 9px 16px;
+  border-left:2px solid #8c2f2455; }
+#retold p{ margin:0; font-size:14.5px; line-height:1.55; font-style:italic; color:#5f5847;
+  max-width:60ch; }
+#retold p::before{ content:'✒ '; font-style:normal; color:#8c2f24; opacity:.75; }
+body.contrast #retold p{ color:#3a3529; }
+
 /* ---- 2. the paper: fibre, foxing, a fold, and a curl ---- */
 .paper::after{
   background-image:

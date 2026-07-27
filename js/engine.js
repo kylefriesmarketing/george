@@ -24,7 +24,7 @@ const cleanName=(v,fallback)=>{
 
 /* ---------------- persistence: the retellings ---------------- */
 function defP(){ return { runs:0, endings:{}, log:{}, mentions:{}, frame:null,
-  names:{ hero:'Kit', friend:'Freddie' }, lastTitle:null, journal:[],
+  names:{ hero:'Kit', friend:'Freddie' }, lastTitle:null, journal:[], seen:{},
   opts:{ size:'normal', reveal:'unfurl', contrast:0, cold:0, nums:0 } }; }
 function loadP(){ try{ const p=JSON.parse(localStorage.getItem(K_P));
   if(p && typeof p==='object' && !Array.isArray(p)){ const d=defP(); const m=Object.assign(d,p);
@@ -34,6 +34,7 @@ function loadP(){ try{ const p=JSON.parse(localStorage.getItem(K_P));
     if(!plain(m.endings)) m.endings={};
     if(!plain(m.log)) m.log={};
     if(!plain(m.mentions)) m.mentions={};
+    if(!plain(m.seen)) m.seen={};
     if(!Array.isArray(m.journal)) m.journal=[];
     if(typeof m.runs!=='number' || !Number.isFinite(m.runs) || m.runs<0) m.runs=0;
     const pn=plain(p.names)?p.names:{};
@@ -55,7 +56,7 @@ const reducedMotion=()=>{ try{ return window.matchMedia &&
    import MERGES (never loses local progress): best of both, by design. */
 function exportCode(){
   const slim={ runs:P.runs, endings:P.endings, log:P.log, mentions:P.mentions,
-    names:P.names, lastTitle:P.lastTitle, journal:P.journal };
+    names:P.names, lastTitle:P.lastTitle, journal:P.journal, seen:P.seen };
   return 'GG1.'+btoa(unescape(encodeURIComponent(JSON.stringify(slim))));
 }
 function importCode(str){
@@ -81,6 +82,7 @@ function importCode(str){
   P.endings=maxMerge(P.endings, d.endings);
   P.mentions=maxMerge(P.mentions, d.mentions);
   P.log=maxMerge(P.log, d.log);
+  P.seen=maxMerge(P.seen, d.seen);   /* the teller's memory of what he has covered */
   P.runs=Math.max(num(P.runs), num(d.runs));   /* num() or a string 'runs' makes this NaN */
   if(d.lastTitle && !P.lastTitle) P.lastTitle=d.lastTitle;
   if(Array.isArray(d.journal) && d.journal.length>(P.journal||[]).length) P.journal=d.journal.slice(-60);
@@ -476,6 +478,16 @@ function render(nodeId){
   paintRail(); paintHUD(); juice(reg);
   $('region-name').textContent=reg.name;
   $('node-title').textContent=fmt(n.title);
+  /* the teller's marginal note: only from the SECOND telling of a passage,
+     and only where one is written. Counted before rendering so the first
+     visit of a run is never annotated. */
+  P.seen=P.seen||{};
+  const times=(P.seen[nodeId]||0);
+  const note=STORY.retold[nodeId];
+  const which = note ? (times>=3 ? note.b : times>=1 ? note.a : null) : null;
+  $('retold').innerHTML = which ? `<p>${fmt(which)}</p>` : '';
+  $('retold').classList.toggle('on', !!which);
+  P.seen[nodeId]=times+1; saveP();
   const paras=fmt(n.text).split('\n\n');
   if(P.opts.reveal==='type'){
     typeInto($('node-text'), paras.map(p=>`<p>${p}</p>`).join(''));

@@ -1302,6 +1302,45 @@ const glossary = [
 ];
 
 /* ======================================================================
+   RETOLD — the marginal asides. On a SECOND telling of a passage the old
+   man notices he has been here before, and the note is set in the margin
+   in his own voice. Two tiers: the second time (a), and the fourth time
+   and after (b), when the wearing-smooth of a story starts to trouble him.
+   Only the passages a replayer actually revisits are written; silence is
+   better than filler everywhere else.
+   ====================================================================== */
+const retold = {
+  n_fire:{ a:`I have told you the fire before. Notice that I always start it at the same second — the flak, then the wing. Never the four minutes before, when we were bored.`,
+           b:`The fire again. It comes out the same every time now, word for word, and that is how I know it has stopped being a memory and become a story. I am not sure when that happened.` },
+  n_silk:{ a:`Two chutes. You have heard me say two chutes. I have never once, in fifty years, said the other five names in the same breath as that number, and tonight I notice myself not doing it.`,
+           b:`You could say the two-chutes line for me by now. Go on, then — no. No, love, that is mine to carry. But thank you.` },
+  n_dulag:{ a:`The friendly man again. He has got kinder every time I tell him, which frightens me a little.`,
+            b:`I have been softening that major for half a century. He was doing his job well, that is all, and doing it well is the whole of what was wrong with him.` },
+  n_gate:{ a:`The yellow under the grey. I always stop here, you have noticed. Everything that happened afterwards is in that one colour.`,
+           b:`Yes — the sand. I know. You have heard about the sand.` },
+  n_society:{ a:`The lectures and the chess ladder and the stock exchange in cigarettes. I dwell on this part, and I know why: because it is the part nobody believes, and being believed matters more to me than it should.`,
+              b:`I could give you the whole prospectus of Sagan University by now. Stop me if you like. Nobody ever does, and I have begun to suspect that is kindness.` },
+  n_interview:{ a:`The basin of water against the lip-readers. Every telling, that detail. It is how I make you understand what kind of man he was without saying the word.`,
+                b:`The basin, the fogged glass, the black bright eyes. I polish that interview like a button. He is ninth on the list, love, and polishing is what I have instead of flowers.` },
+  n_oath:{ a:`Three tunnels at once. I always let that land the same way — a pause, then the number — because that is how it landed on me.`,
+           b:`Three at once. You knew that was coming. The trouble with a story told well is that it stops being able to surprise the one person who was there.` },
+  n_sand:{ a:`Tiny and his garden. I have used his line about planting blokes in the sky more times than he ever said it, and his granddaughter is sitting right here, so let the record show: he said it once, and I have been living off it since.`,
+           b:`The garden, upside down. I hear myself doing his voice. I am not sure I have got it right for years now, and there is nobody left to correct me but you.` },
+  n_dearjohn:{ a:`Peggy's four sentences. I have never once told this part without wanting to skip it, and I have never once skipped it.`,
+               b:`Four sentences. Still four. I have counted them in my head at odd moments for fifty years, at bus stops, in church.` },
+  n_tomfound:{ a:`Tom going up. You have heard this. What I do not think I have told you is that I was glad, for about a second, that it was Tom and not Harry — and then spent a year being ashamed of that second.`,
+               b:`Tom again. The Weasel's compliment, the Magpie's tea, the whole scene. I have told it so often I can no longer find the moment I actually felt it.` },
+  n_sandy:{ a:`Sandy Cole. I put him early in every telling, and always as wallpaper first, because that is exactly how he was to us until the morning he wasn't.`,
+            b:`Sandy. I have made him a lesson, love, and he was a man who lent me his Dickens. Let me say that part slower this time.` },
+  n_336:{ a:`Three hundred and thirty-six. I never say that number without my hand doing something; watch. Fifty years and the hand still does it.`,
+          b:`The number again. It is the only figure from that war I have never once had to check.` },
+  n_knife:{ a:`The bunk in the dark, and the arithmetic. I have told you this conversation before and I will tell you again, and every time I get to the end of it I am twenty-three years old and I have decided nothing yet.`,
+            b:`You know what we said. I know what we said. And still, every telling, some part of me sets out along that conversation hoping it comes out somewhere new.` },
+  n_list:{ a:`The list under the eagle. I do not embroider this one. I have never once added a word to it, and I never will.`,
+           b:`Forty-one, then fifty. Nothing to add. There has never been anything to add.` },
+};
+
+/* ======================================================================
    THE READER'S COMPANION — the three books are one history, and they
    overlap. This is the true spine, so you can see where each telling
    sits inside the others. book: 1|2|3|0 (0 = shared / the camp itself)
@@ -1339,6 +1378,6 @@ const afterword = `<h3>The Fifty</h3>
 <p><b>On the checking.</b> The load-bearing facts here were verified against the record rather than trusted to memory: Harry's 336 feet and its 30-foot depth; the two-foot-square bore and its halfway stations, Piccadilly and Leicester Square; the 90 minutes lost to a frozen trap; the exit clearing the wire but coming up roughly thirty feet short of the trees; the air-raid blackout; the 77th man seen at 4:55 a.m.; 76 out, 73 retaken, 50 murdered, 3 home; Tom found in September 1943 and Dick given up to camp expansion; the Wooden Horse's 114 days, its 29 October 1943 break-out, and Philpot travelling as a Norwegian margarine salesman to Danzig while Williams and Codner went by Stettin; van der Stok leaving eighteenth and reaching Gibraltar in July 1944. Where this game invents, it invents <em>people</em> — the committee, the crew, the helpers — and the small human weather around documented events. It does not invent the events.</p>
 <p class="af-close"><em>This happened. The names belong to no one, so that the story can belong to all of them.</em></p>`;
 
-return { nodes, endings, regions, CHAPTERS, cast, mentions, glossary, afterword, her, companion,
+return { nodes, endings, regions, CHAPTERS, cast, mentions, glossary, afterword, her, companion, retold,
   bindHelpers, bindP, TUNNEL_GOAL:336, START:'n_club' };
 })();
