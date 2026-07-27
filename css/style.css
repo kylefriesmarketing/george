@@ -10,9 +10,15 @@ html,body{ height:100%; }
 body{
   background:#221d17;
   background-image:radial-gradient(ellipse at 50% 20%, #2b251d 0%, #1c1813 70%);
-  font-family:Georgia,'Times New Roman',serif;
+  /* the shelf's book stack: a true old-style serif where the OS has one,
+     Georgia as the universal fallback */
+  font-family:'Iowan Old Style','Palatino Linotype',Palatino,'Book Antiqua',Georgia,serif;
   color:#2c2a22;
   overflow-x:hidden;
+  font-kerning:normal;
+  font-variant-ligatures:common-ligatures;
+  text-rendering:optimizeLegibility;
+  -webkit-font-smoothing:antialiased;
 }
 button{ font-family:inherit; cursor:pointer; }
 .hidden{ display:none !important; }
@@ -65,7 +71,7 @@ kbd{ font-family:'Courier New',monospace; background:#00000018; padding:0 4px; b
   box-shadow:0 1px 3px #0004; z-index:3; }
 .title-inner{ padding:22px 40px 10px; text-align:center; position:relative; z-index:2; }
 .title-eyebrow{ font-family:'Courier New',monospace; font-size:12px; letter-spacing:3px;
-  color:#8a8266; text-transform:uppercase; }
+  color:#655f4e; text-transform:uppercase; }
 .game-title{ font-family:'Courier New',monospace; font-weight:900; font-size:clamp(34px,7vw,58px);
   letter-spacing:6px; color:#2c2a22; margin:8px 0 2px; }
 .title-sub{ font-style:italic; color:#6d675a; font-size:17px; }
@@ -74,7 +80,7 @@ kbd{ font-family:'Courier New',monospace; background:#00000018; padding:0 4px; b
 .title-residue{ margin:12px auto 0; max-width:540px; font-size:14px; color:#8c2f24; font-style:italic; }
 .names-row{ display:flex; gap:14px; justify-content:center; margin:16px 0 4px; flex-wrap:wrap; }
 .names-row label{ font-family:'Courier New',monospace; font-size:11px; letter-spacing:2px;
-  color:#8a8266; text-transform:uppercase; display:flex; flex-direction:column; gap:3px; align-items:flex-start; }
+  color:#655f4e; text-transform:uppercase; display:flex; flex-direction:column; gap:3px; align-items:flex-start; }
 .names-row input{ font-family:Georgia,serif; font-size:16px; padding:5px 9px; width:170px;
   background:#f7f0dd; border:1px solid #b3ab8f; color:#2c2a22; }
 .title-menu{ display:flex; flex-direction:column; gap:9px; align-items:center; margin-top:16px; }
@@ -87,7 +93,7 @@ kbd{ font-family:'Courier New',monospace; background:#00000018; padding:0 4px; b
 .menu-btn.small{ font-size:12px; padding:7px 20px; background:none; color:#5a5340;
   border:1px solid #b3ab8f; min-width:280px; }
 .menu-btn.small:hover{ color:#8c2f24; border-color:#8c2f24; background:none; }
-.shelf-line{ margin-top:16px; font-size:13px; color:#8a8266; text-align:center; }
+.shelf-line{ margin-top:16px; font-size:13px; color:#655f4e; text-align:center; }
 .shelf-link{ color:#33507a; }
 .title-foot{ margin-top:8px; padding-bottom:10px; font-size:12px; color:#a39a7c; text-align:center; }
 
@@ -120,7 +126,7 @@ kbd{ font-family:'Courier New',monospace; background:#00000018; padding:0 4px; b
 .hud-row{ display:flex; gap:22px; flex-wrap:wrap; align-items:center;
   font-family:'Courier New',monospace; }
 .meter{ display:flex; align-items:center; gap:7px; }
-.m-name{ font-size:10.5px; letter-spacing:2px; text-transform:uppercase; color:#8a8266; }
+.m-name{ font-size:10.5px; letter-spacing:2px; text-transform:uppercase; color:#655f4e; }
 .m-val{ font-size:13px; font-weight:bold; color:#33507a; }
 .heatm .m-dots{ display:flex; gap:3px; }
 .heatm .m-dots i{ width:9px; height:9px; border:1px solid #b3ab8f; border-radius:50%; display:block; }
@@ -142,10 +148,13 @@ kbd{ font-family:'Courier New',monospace; background:#00000018; padding:0 4px; b
 #story-layer{ position:relative; z-index:2; }
 #text-panel{ padding:16px 44px 6px 58px; max-width:860px; }
 #region-name{ font-family:'Courier New',monospace; font-size:11px; letter-spacing:3px;
-  text-transform:uppercase; color:#8a8266; }
+  text-transform:uppercase; color:#655f4e; }
 #node-title{ font-family:'Courier New',monospace; font-size:clamp(19px,3vw,25px); font-weight:bold;
-  letter-spacing:1px; color:#2c2a22; margin:4px 0 12px; }
-#node-text p{ margin:0 0 13px; line-height:1.62; font-size:16.5px; color:#33301f; }
+  letter-spacing:1px; color:#2c2a22; margin:4px 0 14px; text-wrap:balance; }
+/* MEASURE: the prose was running ~100 characters a line. A book sets 60–75. */
+#node-text, #ending-text{ max-width:66ch; }
+#node-text p{ margin:0 0 0.95em; line-height:1.68; font-size:17px; color:#33301f;
+  text-wrap:pretty; hanging-punctuation:first last; }
 #node-text em{ color:#8c2f24; font-style:italic; }
 .unfurl{ opacity:0; animation:unfurl .7s ease forwards; }
 @keyframes unfurl{ from{opacity:0; transform:translateY(7px);} to{opacity:1; transform:none;} }
@@ -158,7 +167,7 @@ kbd{ font-family:'Courier New',monospace; background:#00000018; padding:0 4px; b
 }
 .choice:hover, .choice:focus{ border-left-color:#8c2f24; background:#8c2f240d; outline:none; }
 .c-pre{ display:block; font-family:'Courier New',monospace; font-size:10.5px; letter-spacing:2px;
-  text-transform:uppercase; color:#8a8266; margin-bottom:2px; }
+  text-transform:uppercase; color:#655f4e; margin-bottom:2px; }
 .choice:hover .c-pre{ color:#8c2f24; }
 
 /* ------- ending screen ------- */
@@ -168,24 +177,24 @@ kbd{ font-family:'Courier New',monospace; background:#00000018; padding:0 4px; b
 #ending-art svg{ width:100%; height:100%; display:block; }
 .ending-inner{ padding:22px 52px; position:relative; z-index:2; }
 #ending-kind{ font-family:'Courier New',monospace; font-size:12px; letter-spacing:3px;
-  text-transform:uppercase; color:#8a8266; }
+  text-transform:uppercase; color:#655f4e; }
 #ending-kind.k-pause{ color:#33507a; }
 #ending-title{ font-family:'Courier New',monospace; font-size:clamp(22px,4vw,30px);
   letter-spacing:2px; margin:8px 0 14px; color:#2c2a22; }
 #ending-text{ max-width:640px; margin:0 auto; text-align:left; }
 #ending-text p{ margin:0 0 12px; line-height:1.6; font-size:16px; color:#33301f; }
 #ending-text em{ color:#33507a; }
-#ending-meta{ margin:10px 0 6px; font-family:'Courier New',monospace; font-size:13px; color:#8a8266; }
+#ending-meta{ margin:10px 0 6px; font-family:'Courier New',monospace; font-size:13px; color:#655f4e; }
 #ending-her{ max-width:560px; margin:6px auto 16px; text-align:left; font-style:italic;
   font-size:14.5px; line-height:1.55; color:#5a5340; border-top:1px solid #c9c1a4; padding-top:10px; }
 #ending-her:empty{ display:none; }
 .j-head{ font-family:'Courier New',monospace; letter-spacing:2px; text-transform:uppercase;
   color:#2c2a22; font-weight:bold; margin:20px 0 4px; border-top:1px solid #c9c1a4; padding-top:14px; }
 .j-entry{ padding:6px 2px; border-bottom:1px dashed #d8ceb2; font-size:14px; color:#33301f; }
-.j-n{ font-family:'Courier New',monospace; font-size:11px; color:#8a8266; margin-right:8px; }
+.j-n{ font-family:'Courier New',monospace; font-size:11px; color:#655f4e; margin-right:8px; }
 .j-title{ cursor:pointer; border-bottom:1px dotted #8c2f24; }
 .j-title:hover{ color:#8c2f24; }
-.j-was{ font-size:12px; font-style:italic; color:#8a8266; margin-left:8px; }
+.j-was{ font-size:12px; font-style:italic; color:#655f4e; margin-left:8px; }
 .j-input{ font-family:Georgia,serif; font-size:14px; padding:2px 7px; width:min(280px,60vw);
   background:#f7f0dd; border:1px solid #b3ab8f; color:#2c2a22; }
 
@@ -195,11 +204,11 @@ kbd{ font-family:'Courier New',monospace; background:#00000018; padding:0 4px; b
 .gallery-box{ background:#efe6cf; max-width:720px; width:100%; max-height:86vh; overflow-y:auto;
   padding:26px 30px; box-shadow:0 14px 50px #000c; border:1px solid #d8ceb2; }
 .gallery-box h2{ font-family:'Courier New',monospace; letter-spacing:2px; color:#2c2a22; margin-bottom:6px; }
-.gallery-sub{ font-size:13.5px; font-style:italic; color:#8a8266; margin-bottom:14px; }
+.gallery-sub{ font-size:13.5px; font-style:italic; color:#655f4e; margin-bottom:14px; }
 .grid-cells{ display:grid; grid-template-columns:repeat(auto-fill,minmax(200px,1fr)); gap:9px; }
 .cell{ border:1px solid #b3ab8f; padding:9px 11px; font-size:13.5px; color:#33301f; }
 .cell .ek{ display:block; font-family:'Courier New',monospace; font-size:10px;
-  letter-spacing:2px; text-transform:uppercase; color:#8a8266; margin-bottom:2px; }
+  letter-spacing:2px; text-transform:uppercase; color:#655f4e; margin-bottom:2px; }
 .cell.k-pause .ek{ color:#33507a; }
 .cell.k-got .ek{ color:#3c6b38; }
 .cell.locked{ color:#a39a7c; font-style:italic; }
@@ -262,7 +271,7 @@ kbd{ font-family:'Courier New',monospace; background:#00000018; padding:0 4px; b
 .cmp-ev::before{ content:''; position:absolute; left:-18px; top:16px; width:9px; height:9px;
   border-radius:50%; border:2px solid #efe6cf; background:#8a8266; }
 .cmp-date{ font-family:'Courier New',monospace; font-size:11px; letter-spacing:2px;
-  text-transform:uppercase; color:#8a8266; margin-bottom:3px; }
+  text-transform:uppercase; color:#655f4e; margin-bottom:3px; }
 .cmp-book{ display:block; font-family:'Courier New',monospace; font-size:10px; letter-spacing:1.5px;
   text-transform:uppercase; margin-bottom:4px; }
 .cmp-body{ font-size:14.5px; line-height:1.58; color:#33301f; }
@@ -289,7 +298,7 @@ body.contrast .choice:focus-visible{ outline-color:#701f16; outline-width:3px; }
 
 /* ------- M11: choice numbers (opt-in) ------- */
 .c-num{ display:inline-block; min-width:1.4em; margin-right:8px; font-family:'Courier New',monospace;
-  font-size:12px; font-weight:bold; color:#8a8266; border:1px solid #b3ab8f; border-radius:3px;
+  font-size:12px; font-weight:bold; color:#655f4e; border:1px solid #b3ab8f; border-radius:3px;
   text-align:center; padding:0 3px; vertical-align:1px; }
 .choice:hover .c-num, .choice:focus-visible .c-num{ color:#8c2f24; border-color:#8c2f24; }
 
@@ -309,7 +318,7 @@ body.contrast .choice:focus-visible{ outline-color:#701f16; outline-width:3px; }
 .comp-dot{ width:13px; height:13px; border:1.5px solid #b3ab8f; border-radius:50%;
   display:inline-block; transition:all .3s; }
 .comp-dot.on{ background:#8c2f24; border-color:#8c2f24; box-shadow:0 0 6px #8c2f2466; }
-.comp-note{ font-size:12.5px; font-style:italic; color:#8a8266; }
+.comp-note{ font-size:12.5px; font-style:italic; color:#655f4e; }
 .comp-note.ready{ color:#8c2f24; }
 .comp-note.keeper{ color:#3c6b38; font-weight:bold; font-style:normal; letter-spacing:.5px; }
 
@@ -317,11 +326,11 @@ body.contrast .choice:focus-visible{ outline-color:#701f16; outline-width:3px; }
 .opt-row{ display:flex; align-items:center; gap:8px; flex-wrap:wrap; padding:10px 2px;
   border-bottom:1px solid #d8ceb2; }
 .opt-name{ font-family:'Courier New',monospace; font-size:11px; letter-spacing:2px;
-  text-transform:uppercase; color:#8a8266; min-width:150px; }
+  text-transform:uppercase; color:#655f4e; min-width:150px; }
 .opt-btn{ font-family:'Courier New',monospace; font-size:12.5px; letter-spacing:1px;
   padding:5px 14px; background:none; border:1px solid #b3ab8f; color:#5a5340; }
 .opt-btn.on{ background:#2c2a22; color:#efe6cf; border-color:#2c2a22; }
-.opt-note{ width:100%; font-size:12.5px; font-style:italic; color:#8a8266; margin-top:4px; }
+.opt-note{ width:100%; font-size:12.5px; font-style:italic; color:#655f4e; margin-top:4px; }
 
 /* text size */
 body.text-lg #node-text p{ font-size:18.5px; line-height:1.68; }
@@ -349,7 +358,82 @@ body.cold-hud #hud{ display:none; }
   50%{ opacity:1; } 100%{ opacity:0; background:linear-gradient(105deg,#0000 88%,#fff8e4cc 100%,#0000 120%); } }
 #ending-art{ border:10px solid #f7f2e4; box-shadow:0 4px 16px #0007; transform:rotate(-.4deg); }
 #ending-caption{ font-family:'Courier New',monospace; font-size:12px; letter-spacing:1.5px;
-  color:#8a8266; margin:10px 0 0; font-style:italic; }
+  color:#655f4e; margin:10px 0 0; font-style:italic; }
+/* =====================================================================
+   M16 — THE VISUAL PASS. No new art: this is craft on what's already
+   here. The page should read like a real sheet of airmail paper with a
+   painting mounted on it, and the prose should read like a book.
+   ===================================================================== */
+
+/* ---- 1. the drop cap: every passage opens like a chapter ---- */
+#node-text p:first-child::first-letter,
+#ending-text p:first-child::first-letter{
+  float:left; font-size:3.05em; line-height:.84; font-style:normal; font-weight:400;
+  margin:.04em .09em 0 0; padding-right:.03em; color:#8c2f24;
+  text-shadow:0 1px 0 #fff6, 0 -1px 1px #0000000f;   /* pressed into the paper */
+}
+/* a paragraph that opens on a tag (an em, a quote) must not inherit its slant */
+#node-text p:first-child::first-letter{ font-family:inherit; }
+
+/* ---- 2. the paper: fibre, foxing, a fold, and a curl ---- */
+.paper::after{
+  background-image:
+    /* age spots, softest at the corners */
+    radial-gradient(52px 40px at 6% 3%,   #7a5a2010 0%, #7a5a2000 70%),
+    radial-gradient(64px 46px at 96% 12%, #7a5a200d 0%, #7a5a2000 72%),
+    radial-gradient(46px 38px at 3% 88%,  #7a5a2010 0%, #7a5a2000 70%),
+    radial-gradient(70px 50px at 92% 97%, #7a5a200c 0%, #7a5a2000 72%),
+    /* the fold this sheet arrived in */
+    linear-gradient(180deg, #0000 calc(33% - 14px), #5a4a2008 33%, #fff5 calc(33% + 1px), #0000 calc(33% + 14px)),
+    /* laid-paper fibre */
+    repeating-linear-gradient(0deg,  #0000 0 2px, #00000005 2px 3px),
+    repeating-linear-gradient(90deg, #0000 0 3px, #5a4a2009 3px 4px);
+}
+/* the sheet lifts very slightly off the desk at its foot */
+.paper{ box-shadow:0 14px 44px #000b, 0 3px 10px #0009, inset 0 -26px 30px -26px #5a4a2033; }
+
+/* ---- 3. the mount: the painting sits IN the page, not on top of it ---- */
+#scene-wrap::before, #title-art::after, #ending-art::after{
+  content:''; position:absolute; inset:0; z-index:2; pointer-events:none;
+  /* the paper's own grain carried over the art, so they share a surface */
+  background-image:
+    repeating-linear-gradient(0deg,  #0000 0 2px, #00000008 2px 3px),
+    repeating-linear-gradient(90deg, #0000 0 3px, #5a4a200a 3px 4px);
+  box-shadow:inset 0 0 0 1px #2c2a2233, inset 0 2px 14px #2c2a2240,
+             inset 0 -14px 26px -18px #2c2a2255;
+}
+#scene-wrap, #title-art, #ending-art{ border-radius:1px; }
+
+/* ---- 4. the ledger, on squared paper ---- */
+.hud-panel{
+  background-image:
+    repeating-linear-gradient(0deg,  #0000 0 13px, #33507a0d 13px 14px),
+    repeating-linear-gradient(90deg, #0000 0 13px, #33507a0d 13px 14px);
+  padding:6px 8px 9px; margin-left:-8px;
+  border-bottom:1px solid #c9c1a4;
+}
+
+/* ---- 5. choices: the nib mark and the ink bleed ---- */
+.choice{ position:relative; transition:border-color .18s ease, background .18s ease, padding-left .18s ease; }
+.choice::before{
+  content:''; position:absolute; left:0; top:50%; width:0; height:1px; background:#8c2f24;
+  transform:translateY(-50%); transition:width .22s ease; opacity:.55;
+}
+.choice:hover, .choice:focus-visible{ padding-left:20px; }
+.choice:hover::before, .choice:focus-visible::before{ width:12px; }
+.choice:hover{ background:linear-gradient(90deg,#8c2f2412,#8c2f2400 70%); }
+.c-pre{ text-shadow:0 1px 0 #fff7; }
+
+/* the ending card is set to the same book measure (its old 640px ran ~79 chars) */
+#ending-text{ max-width:62ch; }
+
+/* ---- 6. small type, set properly ---- */
+.game-title{ text-shadow:0 1px 0 #fff8, 0 -1px 1px #0000000d; }
+#ending-title{ text-wrap:balance; }
+#region-name{ text-shadow:0 1px 0 #fff6; }
+#node-text em, #ending-text em{ font-style:italic; }
+::selection{ background:#d8a24a55; color:#2c2a22; }
+
 /* ------- M13: touch tap targets (pointer:coarse = any touch device) -------
    Measured before: small menu buttons 30px, option buttons 26px, inputs 28px —
    all under the 44px guidance. Sized up without touching the desktop look. */

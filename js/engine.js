@@ -408,7 +408,7 @@ $('btn-tellings').onclick=()=>{
 function paintRail(){
   const reg=REGIONS[NODES[S.node].region];
   let s=`<svg viewBox="0 0 42 500" preserveAspectRatio="xMidYMin meet">`;
-  s+=`<text x="21" y="24" text-anchor="middle" font-size="8" fill="#8a8266" font-family="Courier New,monospace" letter-spacing="2">CH</text>`;
+  s+=`<text x="21" y="24" text-anchor="middle" font-size="8" fill="#655f4e" font-family="Courier New,monospace" letter-spacing="2">CH</text>`;
   STORY.CHAPTERS.forEach((c,i)=>{
     const y=48+i*48, on=i+1===reg.ch, done=i+1<reg.ch && reg.ch!==9;
     s+=`<circle cx="21" cy="${y}" r="${on?6:4}" fill="${on?'#8c2f24':done?'#8a8266':'none'}" stroke="${on?'#8c2f24':'#b3ab8f'}" stroke-width="1.4"/>`;
@@ -436,9 +436,9 @@ function tunnelSVG(){
     s+=`<line x1="${px}" y1="40" x2="${gx+gw}" y2="40" stroke="#c9c1a4" stroke-width="1.4" stroke-dasharray="3 4"/>`;
     s+=`<path d="M${w-16} 18 L${w-10} 6 L${w-4} 18 Z" fill="#3c4c38"/>`;                  /* the trees */
     s+=`<path d="M${w-26} 18 L${w-21} 9 L${w-16} 18 Z" fill="#3c4c38" opacity=".8"/>`;
-    s+=`<text x="${w-6}" y="52" text-anchor="end" font-size="9" font-family="Courier New,monospace" fill="#8a8266">of ${goal}${horse?' — from the horse':''}</text>`;
+    s+=`<text x="${w-6}" y="52" text-anchor="end" font-size="9" font-family="Courier New,monospace" fill="#655f4e">of ${goal}${horse?' — from the horse':''}</text>`;
   } else {
-    s+=`<text x="${w-6}" y="52" text-anchor="end" font-size="9" font-family="Courier New,monospace" fill="#8a8266">GEORGE — no end mark</text>`;
+    s+=`<text x="${w-6}" y="52" text-anchor="end" font-size="9" font-family="Courier New,monospace" fill="#655f4e">GEORGE — no end mark</text>`;
   }
   s+=`<text x="${clamp(px,30,w-96)}" y="52" font-size="10" font-family="Courier New,monospace" fill="#5a4a10" font-weight="bold">${S.feet} ft</text>`;
   return s+`</svg>`;
@@ -555,13 +555,13 @@ $('btn-keep').onclick=()=>{
     /* airmail border */
     for(let i=0,x=0;x<1200;i++,x+=44){ c.fillStyle=i%2?'#33507a':'#8c2f24'; c.fillRect(x,0,30,10); c.fillRect(1200-x-30,620,30,10); }
     c.fillStyle='#efe6cf'; c.fillRect(0,400,1200,220);
-    c.fillStyle='#8a8266'; c.font='16px Courier New'; c.textAlign='left';
+    c.fillStyle='#655f4e'; c.font='16px Courier New'; c.textAlign='left';
     c.fillText('G FOR GEORGE — THE TUNNELS OF STALAG LUFT III', 48, 448);
     c.fillStyle='#2c2a22'; c.font='bold 52px Courier New';
     c.fillText(lastEnd.title, 44, 510);
     c.fillStyle='#5a5340'; c.font='italic 22px Georgia';
     c.fillText(`Telling № ${lastEnd.n} · ${lastEnd.kind==='pause'?'a bookmark':lastEnd.kind} · one of 14 tellings`, 48, 552);
-    c.fillStyle='#8a8266'; c.font='16px Courier New';
+    c.fillStyle='#655f4e'; c.font='16px Courier New';
     c.fillText('kylefriesmarketing.github.io/george — part of THE SHELF', 48, 592);
     const a=document.createElement('a');
     a.download=`george-telling-${lastEnd.n}.png`;

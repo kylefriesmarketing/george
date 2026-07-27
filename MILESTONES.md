@@ -382,6 +382,38 @@ project — plus one self-inflicted crash caught before it shipped.
       prose, `$&` renders literally, normal renaming still works in prose/choices/HUD with no
       double-escaping, console clean.
 
+## M16 — THE VISUAL PASS (0cr, no new art) — ✅ DONE 2026-07-20
+
+Craft on what was already there. Measured before changing, verified by computation
+(screenshots need the Browser pane displayed, so they remain unavailable — DOM/computed-style
+checks are the method here).
+
+- [x] **MEASURE — a real readability defect.** The prose ran at **~100 characters per line**
+      (860px at 16.5px); books set 60–75. Now `66ch` → **measured 64 chars** at 1280px, and the
+      ending card 640px/~79ch → `62ch` → **61 chars**. This is the single biggest legibility win
+      in the game and it cost nothing.
+- [x] **Typography**: shelf-consistent old-style serif stack (Iowan Old Style / Palatino →
+      Georgia fallback, matching THE ROOM), kerning + common ligatures, `text-wrap:balance` on
+      titles and `pretty` on prose, hanging punctuation, 17px/1.68 rhythm.
+- [x] **Drop caps**: every passage and every ending opens like a chapter — 3.05em red-ink
+      capital pressed into the paper. Verified applying (51.85px vs 17px) and not crowding the
+      column on mobile (15% of measure).
+- [x] **The paper is a real sheet**: laid fibre, corner foxing, the crease it was folded along,
+      and a foot-of-page curl shadow — 7 layered gradients, no images.
+- [x] **The art is mounted, not pasted**: the page's own grain carried over each painting plus
+      an inset shadow, so scene/title/ending art share a surface with the paper instead of
+      floating on it.
+- [x] **The ledger sits on squared paper**; choices gained a nib mark and an ink-bleed hover.
+- [x] **ACCESSIBILITY BUG FOUND & FIXED (pre-existing).** Contrast-audited the whole palette:
+      prose 10.06, title 10.9, drop cap 6.26 — but the small uppercase labels (`.c-pre` choice
+      taglines, `#region-name`, `.m-name`, and the SVG/share-card labels) sat at **2.92:1,
+      failing WCAG AA**. Solved the ink by computing candidates against all five register paper
+      colours: `#8a8266` → **`#655f4e`** (worst case 4.64). Now **4.83 everywhere**. Decorative
+      strokes and the dark debug panel's borders deliberately left alone.
+- [x] **GATE:** soak green; measure verified at desktop AND mobile; drop caps on both screens;
+      zero horizontal overflow at 1280 and 375 (no offenders); M13 tap targets intact; contrast
+      AA across all labels; console clean.
+
 ---
 M0+M1 are one sitting (the slice proves the voice).
 M2 is the long march — the economy first, then beats in calendar order. M3 before ANY art.
