@@ -224,7 +224,7 @@ night(r){ let s=wash(r,'#10141d','#0b0e15');
 hole(r){ let s=wash(r,'#0e1218','#0a0d13');
   for(let i=0;i<24;i++) s+=E(r()*320,r()*50,.7,.7,P.snow,.25+r()*.4);
   s+=R(0,110,320,70,'#e3e5e2',.9)+R(0,104,320,10,'#c9ccc8',.6); /* open snow */
-  s+=pines(r,30,'#1d2a20',9); /* the treeline, ten feet too far */
+  s+=pines(r,30,'#1d2a20',9); /* the treeline, thirty feet too far */
   s+=E(96,138,17,9,'#0d0b08')+E(96,136,13,6,'#241c10'); /* the hole */
   s+=E(96,130,9,4,P.sand,.5);
   s+=`<path d="M96 138 C 140 132, 200 120, 248 108" stroke="#5a5340" stroke-width="1.6" fill="none" opacity=".8" stroke-dasharray="5 4"/>`; /* the rope */
