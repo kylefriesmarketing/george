@@ -407,10 +407,17 @@ sand(r){ let s=wash(r,'#9aa8b4','#90a0ae');
   return s+grain(r); },
 };
 
+/* ending cards fall back to the nearest procedural scene if a JPG is missing */
+const END_FALLBACK={ end_needle:'docks', end_longwalk:'walk', end_uniform:'station',
+  end_man77:'hole', end_given_stockholm:'docks', end_given_list:'list',
+  end_garden:'tunnel', end_roadwest:'marchw', end_appell:'winter', end_hook:'cooler',
+  end_roll:'club', end_horse:'horse', end_relay:'pyrenees', end_keeper:'club' };
+
 function paint(el, key, seed){
-  const r=rng(key+'|'+seed);
-  const body=(scenes[key]||scenes.compound)(r);
-  el.innerHTML=`<svg viewBox="0 0 320 180" preserveAspectRatio="xMidYMid slice" aria-hidden="true">${body}</svg>`;
+  const k = END_FALLBACK[key] || key;
+  const r=rng(k+'|'+seed);
+  const body=(scenes[k]||scenes.compound)(r);
+  el.innerHTML='<svg viewBox="0 0 320 180" preserveAspectRatio="xMidYMid slice" aria-hidden="true">'+body+'</svg>';
 }
 return { paint };
 })();
