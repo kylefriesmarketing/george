@@ -25,7 +25,7 @@ const cleanName=(v,fallback)=>{
 /* ---------------- persistence: the retellings ---------------- */
 function defP(){ return { runs:0, endings:{}, log:{}, mentions:{}, frame:null,
   names:{ hero:'Kit', friend:'Freddie' }, lastTitle:null, journal:[], seen:{},
-  opts:{ size:'normal', reveal:'unfurl', contrast:0, cold:0, nums:0 } }; }
+  opts:{ size:'normal', reveal:'unfurl', contrast:0, cold:0, nums:0, vo:1 } }; }
 function loadP(){ try{ const p=JSON.parse(localStorage.getItem(K_P));
   if(p && typeof p==='object' && !Array.isArray(p)){ const d=defP(); const m=Object.assign(d,p);
     /* a damaged persist must not leave a string/array where a map is expected —
@@ -39,7 +39,7 @@ function loadP(){ try{ const p=JSON.parse(localStorage.getItem(K_P));
     if(typeof m.runs!=='number' || !Number.isFinite(m.runs) || m.runs<0) m.runs=0;
     const pn=plain(p.names)?p.names:{};
     m.names={ hero:cleanName(pn.hero,'Kit'), friend:cleanName(pn.friend,'Freddie') };
-    m.opts=Object.assign({size:'normal',reveal:'unfurl',contrast:0,cold:0,nums:0}, plain(p.opts)?p.opts:{});
+    m.opts=Object.assign({size:'normal',reveal:'unfurl',contrast:0,cold:0,nums:0,vo:1}, plain(p.opts)?p.opts:{});
     return m; } }catch(e){}
   const fresh=defP();
   /* first-ever load: seed options from the OS accessibility preferences */
@@ -126,6 +126,30 @@ function loadRun(){
   return r;
 }
 
+
+/* ---------------- the teller's voice (M22) ----------------
+   One audio element, reused. Never blocks, never autoplays before a
+   gesture (every line follows a click), always yields to mute and to
+   the narration option. A missing file is simply silence. */
+let voEl=null, voLast=null;
+function playVO(id){
+  const stem = STORY.vo && STORY.vo[id];
+  if(!stem) return;
+  if(!P.opts.vo) return;
+  if(AUDIO && AUDIO.muted) return;
+  if(voLast===id) return;            /* don't repeat on a re-render */
+  voLast=id;
+  try{
+    if(!voEl){ voEl=new Audio(); voEl.preload='none'; }
+    voEl.pause();
+    voEl.src='assets/vo/'+stem+'.mp3';
+    voEl.volume=0.9;
+    const p=voEl.play();
+    if(p && p.catch) p.catch(()=>{});   /* autoplay refusal is not an error */
+  }catch(err){}
+}
+function stopVO(){ try{ if(voEl){ voEl.pause(); } }catch(e){} }
+
 /* ---------------- text ---------------- */
 function fmt(t){ const s=String(typeof t==='function'?t(S,P):t);
   const hero=esc(P.names.hero), friend=esc(P.names.friend);
@@ -159,6 +183,9 @@ function optionsPanel(){
     <div class="opt-row"><span class="opt-name">choice numbers</span>
       ${['0','1'].map(v=>`<button class="opt-btn ${String(o.nums)===v?'on':''}" data-k="nums" data-v="${v}">${v==='1'?'shown':'hidden'}</button>`).join('')}
       <div class="opt-note">Press 1–9 to choose. Turn this on to see the numbers on each choice.</div></div>
+    <div class="opt-row"><span class="opt-name">the teller's voice</span>
+      ${['1','0'].map(v=>`<button class="opt-btn ${String(o.vo)===v?'on':''}" data-k="vo" data-v="${v}">${v==='1'?'on':'off'}</button>`).join('')}
+      <div class="opt-note">A dozen spoken lines at the moments that carry. The rest is yours to read.</div></div>
     <div class="opt-row"><span class="opt-name">cold telling</span>
       ${['0','1'].map(v=>`<button class="opt-btn ${String(o.cold)===v?'on':''}" data-k="cold" data-v="${v}">${v==='1'?'ledger hidden':'ledger shown'}</button>`).join('')}
       <div class="opt-note">He never saw the meters either. Tell Book One cold, start to finish, and it is Mentioned.</div></div>
@@ -175,7 +202,8 @@ function optionsPanel(){
       <div id="nb-msg" class="opt-note" aria-live="polite"></div></div>`;
   $('gallery-body').querySelectorAll('.opt-btn[data-k]').forEach(b=>{
     b.onclick=()=>{ const k=b.dataset.k, v=b.dataset.v;
-      P.opts[k]=(k==='contrast'||k==='cold'||k==='nums')?+v:v; saveP(); applyOpts(); optionsPanel(); };
+      P.opts[k]=(k==='contrast'||k==='cold'||k==='nums'||k==='vo')?+v:v;
+      if(k==='vo'&&!+v) stopVO(); saveP(); applyOpts(); optionsPanel(); };
   });
   const ex=$('nb-export'); if(ex) ex.onclick=()=>{ const t=$('nb-code'); t.value=exportCode();
     t.focus(); t.select(); try{ document.execCommand('copy'); }catch(e){}
@@ -488,6 +516,7 @@ function render(nodeId){
   $('retold').innerHTML = which ? `<p>${fmt(which)}</p>` : '';
   $('retold').classList.toggle('on', !!which);
   P.seen[nodeId]=times+1; saveP();
+  playVO(nodeId);
   const paras=fmt(n.text).split('\n\n');
   if(P.opts.reveal==='type'){
     typeInto($('node-text'), paras.map(p=>`<p>${p}</p>`).join(''));
@@ -552,6 +581,7 @@ function ending(id){
   $('ending-text').innerHTML=fmt(e.text).split('\n\n').map(p=>`<p>${p}</p>`).join('');
   $('ending-meta').textContent = S && S.flags.tunnelRevealed ? `${S.feet} feet on the ledger` : '';
   $('ending-her').innerHTML = STORY.her[id] ? fmt(STORY.her[id]) : '';
+  playVO(id);
   $('ending-caption').textContent = `Telling № ${P.runs} — pasted into her notebook`;
   $('btn-lastpage').classList.toggle('urgent', id==='e_roll');
   show('ending-screen');

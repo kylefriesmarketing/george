@@ -1341,6 +1341,18 @@ const retold = {
 };
 
 /* ======================================================================
+   THE TELLER'S VOICE — a dozen surgical lines, not narration. Each plays
+   once when its passage or ending is reached. Keyed id -> file stem in
+   assets/vo/. Deliberately sparse: the prose carries the story, the voice
+   only lands on the moments that were already doing the work.
+   ====================================================================== */
+const vo = {
+  n_fire:'fire', n_gate:'gate', n_sand:'sand', n_dearjohn:'dearjohn', n_336:'f336',
+  n_night2:'night2', n_list:'list', n_sandy:'sandy', n_georgeprop:'george',
+  n_v5:'somebodys', e_roll:'roll', e_garden:'garden',
+};
+
+/* ======================================================================
    THE READER'S COMPANION — the three books are one history, and they
    overlap. This is the true spine, so you can see where each telling
    sits inside the others. book: 1|2|3|0 (0 = shared / the camp itself)
@@ -1378,6 +1390,6 @@ const afterword = `<h3>The Fifty</h3>
 <p><b>On the checking.</b> The load-bearing facts here were verified against the record rather than trusted to memory: Harry's 336 feet and its 30-foot depth; the two-foot-square bore and its halfway stations, Piccadilly and Leicester Square; the 90 minutes lost to a frozen trap; the exit clearing the wire but coming up roughly thirty feet short of the trees; the air-raid blackout; the 77th man seen at 4:55 a.m.; 76 out, 73 retaken, 50 murdered, 3 home; Tom found in September 1943 and Dick given up to camp expansion; the Wooden Horse's 114 days, its 29 October 1943 break-out, and Philpot travelling as a Norwegian margarine salesman to Danzig while Williams and Codner went by Stettin; van der Stok leaving eighteenth and reaching Gibraltar in July 1944. Where this game invents, it invents <em>people</em> — the committee, the crew, the helpers — and the small human weather around documented events. It does not invent the events.</p>
 <p class="af-close"><em>This happened. The names belong to no one, so that the story can belong to all of them.</em></p>`;
 
-return { nodes, endings, regions, CHAPTERS, cast, mentions, glossary, afterword, her, companion, retold,
+return { nodes, endings, regions, CHAPTERS, cast, mentions, glossary, afterword, her, companion, retold, vo,
   bindHelpers, bindP, TUNNEL_GOAL:336, START:'n_club' };
 })();
