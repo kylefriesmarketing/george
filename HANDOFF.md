@@ -214,3 +214,29 @@ not exist, and it would break the game's own contract — *the names belong to n
 ---
 
 *The light is on in Hut 104. — handed over at M20.*
+
+---
+
+## 9. Addendum — the Higgsfield pass (M21–M22)
+
+**M21 · art completed.** Seven scenes that were borrowing another region's painting or falling
+back to procedural SVG (`trade`, `order`, `lottery`, `agency`, `garden`, `station`, `walk`) now
+have their own, and **all 14 endings have bespoke cards**. Ending art keys are namespaced
+`end_*`; `images.js` routes those to `assets/endings/` and everything else to `assets/scenes/`,
+so the engine needed no change. `art.js` holds `END_FALLBACK` so a missing card degrades to a
+sensible procedural scene.
+
+**M22 · the teller's voice.** Twelve spoken lines (`STORY.vo` → `assets/vo/*.mp3`, mono 24k,
+588 KB total) at the moments that already carry. `playVO()` reuses one Audio element, won't
+repeat on a re-render, and yields to both global mute and the new **"the teller's voice"**
+option (default on). Autoplay refusal and missing files are treated as silence.
+
+**Costs, measured this pass:** images **2 credits each**; `seed_audio` speech **0.6 credits a
+line** (preflight with `get_cost:true` before committing to a batch — the rate has moved ~10×
+historically). Total spend: **~51 credits**. Voice preset: **Arthur**
+(`30fc8796-ceb6-4a66-b3a7-4a145ef7f346`) — chosen by Kyle from samples.
+
+⚠️ **I cannot hear.** The voice was selected by Kyle from generated samples, not by me. If
+narration is ever re-judged or extended, generate a sample and ask rather than assuming.
+
+⚠️ Still holding: **painted only, never photoreal, never a likeness of a real named man.**
